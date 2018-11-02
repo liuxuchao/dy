@@ -8,16 +8,18 @@
             <li class="flow-checkout-adr ">
                 <div class="flow-have-adr f-h-adr-title dis-box ">
                     <div class="left-icon"><img src="{elixir('img/payment')}/{$payment.pay_code}.png"  style="color:#51C332"/></div>
+			    <label class="dis-box change {if $payment.pay_id == $order.pay_id }active{/if}" item="{$payment.pay_id}" >
                     <div class="box-flex">
                         <h4 class="f-05">{$payment.pay_name}</h4>
                     </div>
                     <div class="of-hidden m-top06">
                         <div class="ect-select">
-                            <label class="dis-box change {if $payment.pay_id == $order.pay_id }active{/if}" item="{$payment.pay_id}" >
+                           
                                 <i class="select-btn active-i "></i>
-                            </label>
+                            
                         </div>
                     </div>
+			   </label>
                 </div>
             </li>
             {/foreach}

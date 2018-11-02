@@ -197,8 +197,8 @@ class IndexController extends FrontendController
 
         // 微信JSSDK分享
         $share_data = [
-            'title' => $page_title,
-            'desc' => $description,
+            'title' => $goods['goods_name'],
+            'desc' => $goods['shop_price'],
             'link' => '',
             'img' => $goods['goods_img'],
         ];
