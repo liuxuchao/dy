@@ -1,0 +1,39 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class ChangeQrpayDiscountsTable extends Migration
+{
+    protected $tableName = 'qrpay_discounts'; // 扫码收款优惠
+
+    /**
+     * 运行数据库迁移
+     *
+     * @return void
+     */
+    public function up()
+    {
+        if (!Schema::hasColumn($this->tableName, 'ru_id')) {
+            Schema::table($this->tableName, function (Blueprint $table) {
+                $table->unsignedInteger('ru_id')->default(0)->comment('商家ID');
+            });
+        }
+    }
+
+    /**
+     * 回滚数据库迁移
+     *
+     * @return void
+     */
+    public function down()
+    {
+        // 删除字段
+        if (Schema::hasColumn($this->tableName, 'ru_id')) {
+            Schema::table($this->tableName, function (Blueprint $table) {
+                $table->dropColumn('ru_id');
+            });
+        }
+    }
+}

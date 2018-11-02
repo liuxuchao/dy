@@ -1,0 +1,60 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
+
+/*
+|--------------------------------------------------------------------------
+| Create The Application
+|--------------------------------------------------------------------------
+|
+| First we need to get an application instance. This creates an instance
+| of the application / container and bootstraps the application so it
+| is ready to receive HTTP / Console requests from the environment.
+|
+*/
+
+$app = new Laravel\Lumen\Application(
+    realpath(__DIR__.'/')
+);
+
+/*
+|--------------------------------------------------------------------------
+| Register Container Bindings
+|--------------------------------------------------------------------------
+|
+| Now we will register a few bindings in the service container. We will
+| register the exception handler and the console kernel. You may add
+| your own bindings here if you like or you can make another file.
+|
+*/
+
+$app->singleton(
+    Illuminate\Contracts\Debug\ExceptionHandler::class,
+    App\Exceptions\Handler::class
+);
+
+$app->singleton(
+    Illuminate\Contracts\Console\Kernel::class,
+    App\Console\Kernel::class
+);
+
+/*
+|--------------------------------------------------------------------------
+| Run The Artisan Application
+|--------------------------------------------------------------------------
+|
+| When we run the console application, the current CLI command will be
+| executed in this console and the response sent back to a terminal
+| or another output device for the developers. Here goes nothing!
+|
+*/
+
+$kernel = $app->make(
+    'Illuminate\Contracts\Console\Kernel'
+);
+
+exit($kernel->handle(new ArgvInput, new ConsoleOutput));

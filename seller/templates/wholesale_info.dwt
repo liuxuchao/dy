@@ -1,0 +1,420 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>{include file ='library/seller_html_head.lbi'}</head>
+
+<body>
+{include file ='library/seller_header.lbi'}
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        {include file ='library/seller_menu_left.lbi'}
+        <div class="ecsc-layout-right">
+            <div class="main-content" id="mainContent">
+                {include file ='library/url_here.lbi'}
+				{include file ='library/seller_menu_tab.lbi'}
+                <div class="explanation clear" id="explanation">
+                    <div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4></div>
+                    <ul>
+                    	<li>温馨提示：提交操作将会重新审核，请慎重提交确定。</li>
+                    </ul>
+                </div>
+                <div class="ecsc-form-goods">
+                    <form method="post" action="wholesale.php" name="theForm" enctype="multipart/form-data" id="wholesale_form">
+                    <div class="wrapper-list border1">
+                    	<!-- {if $form_action eq "insert"} 编辑时不能改商品名称 -->
+                        <dl>
+                        	<dt>{$lang.pls_search_goods}：</dt>
+                            <dd>
+                            	<div class="goods_search_div">
+								<div class="search_select">
+									<div class="categorySelect">
+										<div class="selection">
+											<input type="text" name="category_name" id="category_name" class="text w250 valid" value="请选择分类" autocomplete="off" readonly data-filter="cat_name" />
+											<input type="hidden" name="category_id" id="category_id" value="0" data-filter="cat_id" />
+										</div>
+										<div class="select-container" style="display:none;">
+											{include file="library/filter_category.lbi"}
+										</div>
+									</div>
+								</div>
+								<div class="search_select">
+									<div class="brandSelect">
+										<div class="selection">
+											<input type="text" name="brand_name" id="brand_name" class="text w120 valid" value="请选择品牌" autocomplete="off" readonly data-filter="brand_name" />
+											<input type="hidden" name="brand_id" id="brand_id" value="0" data-filter="brand_id" />
+										</div>
+										<div class="brand-select-container" style="display:none;">
+											{include file="library/filter_brand.lbi"}
+										</div>
+									</div>                            
+								</div>
+                                <input type="hidden" name="ru_id" value="{$ru_id}" />
+                                <input type="text" name="keyword" class="text text_2 mr10 mb10" placeholder="请输入关键字" data-filter="keyword" autocomplete="off" />
+                                <a href="javascript:void(0);" class="sc-btn sc-blueBg-btn" ectype="search" onclick="searchGoods()" >搜索</a>
+                            	</div>
+                            </dd>
+                        </dl>
+                        <!-- {/if} -->
+                        <dl>
+                        	<dt>{$lang.require_field}&nbsp;{$lang.label_goods_name}</dt>
+                            <dd>
+                            	<!-- {if $form_action eq "insert"} 编辑时不能改商品名称 -->
+                                <div class="label_value">
+                                    <div id="goods_name" class="imitate_select select_w320 mr0">
+                                        <div class="cite">{$wholesale.goods_name}</div>
+                                        <ul>
+                                            <li class="li_not">请先搜索商品</li>
+                                        </ul>
+                                        <input name="goods_id" id="goods_id" type="hidden" value="{$wholesale.goods_id}">
+                                    </div>
+                                    <div class="form_prompt"></div>
+                                </div>
+                          		<input name="goods_name" type="hidden" id="goods_name" value="{$wholesale.goods_name}" />
+                                <div class="notic">编辑时不能改商品名称</div>
+                                <!-- {else} -->
+                                <div class="red_text">{$wholesale.goods_name}</div>
+                                <input name="goods_name" type="hidden" id="goods_name" value="{$wholesale.goods_name}" />
+                                <input name="goods_id" id="goods_id" type="hidden" value="{$wholesale.goods_id}">
+                                <!-- {/if} -->
+                            </dd>
+                        </dl>
+                        <dl>
+                        	<dt>{$lang.require_field}&nbsp;{$lang.label_rank_name}</dt>
+                            <dd>
+                            	<div class="checkbox_items">
+                                {foreach from=$user_rank_list item=rank} 
+                                    <div class="checkbox_item">
+                                    <input name="rank_id[]" type="checkbox" class="ui-checkbox" id="rank_id[{$rank.rank_id}]" value="{$rank.rank_id}" {if $rank.checked}checked="checked"{/if} />
+                                    <label class="ui-label" for="rank_id[{$rank.rank_id}]">{$rank.rank_name}</label>
+                                    </div>
+                                {/foreach}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                        	<dt>{$lang.label_enabled}</dt>
+                            <dd>
+                            	<div class="checkbox_items">
+                                    <div class="checkbox_item">
+                                        <input type="radio" class="ui-checkbox" name="enabled" id="enabled_1" value="1" {if $wholesale.enabled}checked="checked"{/if} />
+                                        <label class="ui-label" for="enabled_1">{$lang.yes}</label>
+                                    </div>
+                                    <div class="checkbox_item">
+                                        <input type="radio" class="ui-checkbox" name="enabled" id="enabled_0" value="0" {if !$wholesale.enabled}checked="checked"{/if} />
+                                        <label class="ui-label" for="enabled_0">{$lang.no}</label>
+                                    </div>
+                              	</div>
+                            </dd>
+                        </dl>
+                        <dl class="notBg">
+                        	<dt>{$lang.select_attr}：</dt>
+                            <dd id="price-div">
+                            	{foreach from=$wholesale.price_list key=key item=attr_price}
+                                  <table width="100%">
+                                    <!-- {if $attr_list} 该商品的属性 -->
+                                    <tr>
+                                      <td>
+                                      {foreach from=$attr_list item=attr}
+                                      <label class="fl lh">{$attr.attr_name}：</label>
+                                      <div class="imitate_select select_w120">
+                                          <div class="cite">请选择...</div>
+                                          <ul>
+                                              {foreach from=$attr.goods_attr_list item=item key=k}
+                                              <li><a href="javascript:;" data-value="{$k}" class="ftx-01">{$item}</a></li>
+                                              {/foreach}
+                                          </ul>
+                                          <input name="attr_{$attr.attr_id}[{$key}]" type="hidden" value="{$attr_price.attr[$attr.attr_id]}">
+                                      </div>
+                                      {/foreach}
+                                      {if $key eq 0}<input type="button" class="sc-btn btn30 sc-blueBg-btn" value="添加" onclick="addAttr(this)" /> {else} <input type="button" class="sc-btn btn30 sc-redBg-btn" value="删除" onclick="dropAttr(this)" /> {/if}
+                                      </td>
+                                    </tr>
+                                    <!-- {/if} -->
+            
+                                    {foreach from=$attr_price.qp_list key=index item=qp}
+                                    <tr>
+                                      <td>
+                                      <label class="fl lh">{$lang.quantity}：</label><input name="quantity[{$key}][]" type="text" class="text text_3 w100 mr10" value="{$qp.quantity}" />
+                                      <label class="fl lh">{$lang.price}：</label><input name="price[{$key}][]" type="text" class="text text_3 w100 mr10" value="{$qp.price}" />
+                                      {if $index eq 0}<input type="button" class="sc-btn btn30 sc-blueBg-btn" value="添加" onclick="addQuantityPrice(this, '{$key}')" />{else}<input type="button" class="sc-btn btn30 sc-redBg-btn" value="删除" onclick="dropQuantityPrice(this)" />{/if}
+                                      </td>
+                                    </tr>
+                                    {/foreach}
+                                  </table>
+                                  {/foreach}
+                            </dd>
+                        </dl>
+                        {if $wholesale.act_id}
+                        <dl>
+                            <dt>{$lang.adopt_status}：</dt>
+                            <dd>
+                                <div class="checkbox_items">
+                                    <div class="checkbox_item">
+                                        {if $wholesale.review_status eq 1}
+                                            {$lang.not_audited}
+                                        {elseif $wholesale.review_status eq 2}
+                                            {$lang.audited_not_adopt}
+                                        {elseif $wholesale.review_status eq 3}
+                                            {$lang.audited_yes_adopt}
+                                        {/if}
+                                    </div>
+                                </div>
+                            </dd>
+                        </dl>
+                            {if $wholesale.review_status eq 2}
+                            <dl>
+                                <dt>{$lang.adopt_reply}：</dt>
+                                <dd>
+                                    <textarea name="review_content" cols="40" rows="3" class="textarea red" disabled="disabled" style="background:#FFF;">{$wholesale.review_content}</textarea>
+                                </dd>
+                            </dl>
+                            {/if}
+                        {/if}
+                        <dl class="button_info">
+                        	<dt>&nbsp;</dt>
+                            <dd>
+                            	<input type="submit" class="sc-btn sc-blueBg-btn btn35" value="{$lang.button_submit}" id="submitBtn" />
+                                <input type="reset" class="sc-btn btn35 sc-blue-btn" value="{$lang.button_reset}" />
+                                <input type="hidden" name="act" value="{$form_action}" />
+                                <input type="hidden" name="id" value="{$wholesale.act_id}" />
+                                <input type="hidden" name="seed" id="seed" value="{$key}" />
+                            </dd>
+                        </dl>
+                    </div>  
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file ='library/seller_footer.lbi'}
+<script>
+<!--
+//活动商品下拉
+$.divselect("#goods_name","#goods_id",function(){
+	document.getElementById('price-div').innerHTML = '';
+	var goodsId = document.getElementById('goods_id').value;
+	getGoodsInfo(goodsId);
+});
+		
+//表单验证
+$(function(){
+	$("#submitBtn").click(function(){
+		if($("#wholesale_form").valid()){
+			$("#wholesale_form").submit();
+		}
+	});
+	
+	/*jQuery.validator.addMethod("checkbox", function(value, element) {      
+			if($(element).is(':checked').length>0){
+				return
+			}       
+		}, "请选择会员等级"); */ 
+	
+	$('#wholesale_form').validate({
+		errorPlacement: function(error, element){
+			var error_div = element.parents('dl').find('div.form_prompt');
+			//element.parents('dl').find(".notic").hide();
+			error_div.append(error);
+		},
+		rules : {
+			'goods_id' : {
+				min : 1
+			}
+		},
+		messages : {
+			goods_id : {
+				min : '<i class="icon icon-exclamation-sign"></i>请选择批发商品'
+			}
+		}
+	});
+});		
+
+ function searchGoods()
+    {
+        var filter = new Object;
+        filter.keyword  = document.forms['theForm'].elements['keyword'].value;
+        filter.cat_id  = document.forms['theForm'].elements['category_id'].value;
+        filter.brand_id  = document.forms['theForm'].elements['brand_id'].value;
+        filter.ru_id = document.forms['theForm'].elements['ru_id'].value;
+    
+        Ajax.call('wholesale.php?is_ajax=1&act=search_goods', filter, searchGoodsResponse, 'GET', 'JSON');
+    }
+
+function searchGoodsResponse(result)
+    {
+        $("#goods_name").children("ul").find("li").remove();
+        
+        var goods = result.content;
+        if (goods)
+        {
+          for (i = 0; i < goods.length; i++)
+          {
+            $("#goods_name").children("ul").append("<li><a href='javascript:;' data-value='"+goods[i].goods_id+"' class='ftx-01'>"+goods[i].goods_name+"</a></li>")
+          }
+          $("#goods_name").children("ul").show();
+        }
+    }
+
+/**
+     * 取得某商品信息
+     * @param int goodsId 商品id
+     */
+    function getGoodsInfo(goodsId)
+    {
+      if (goodsId > 0)
+      {
+        Ajax.call('wholesale.php?is_ajax=1&act=get_goods_info', 'goods_id=' + goodsId, getGoodsInfoResponse, 'get', 'json');
+      }
+      else
+      {
+        var divObj = document.getElementById('price-div');
+        divObj.innerHTML = '';
+      }
+    }
+    
+    function getGoodsInfoResponse(result)
+    {
+      var divObj = document.getElementById('price-div');
+      var tableObj = divObj.appendChild(document.createElement('TABLE'));
+      tableObj.className="table_items";
+      var key = getKey();
+      if (result.length > 0)
+      {
+        var row1 = tableObj.insertRow(-1);
+        //var cell1 = row1.insertCell(-1);
+        var cell2 = row1.insertCell(-1);
+        //cell2.colSpan = 2;
+        var html = '';
+        //cell1.innerHTML = '&nbsp;';
+        //cell1.className="label";
+        //var cell4 = row1.insertCell(-1);
+        for (var i = 0; i < result.length; i++)
+        {
+          var attr = result[i];
+          var re;
+          html += '<div class="item-item"><label class="fl lh">' + attr.attr_name + '：</label><div class="select_w120 imitate_select" ><div class="cite">{$lang.select_please}</div><ul>';
+          for (var goodsAttrId in attr.goods_attr_list)
+          {
+            if (goodsAttrId != 'toJSONString')
+            {
+                        // 去掉 goodsAttrId 中的字符 c
+                        re = /c/g;
+                        _goodsAttrId = goodsAttrId.replace(re, "");
+    
+              html += '<li><a href="javascript:;" data-value="' + _goodsAttrId + '" class="ftx-01">' + attr.goods_attr_list[goodsAttrId] + '</a></li>';
+            }
+          }
+          html += '</ul><input  name="attr_' + attr.attr_id + '[' + key + ']" type="hidden" value=""></div></div>';
+        }
+        //cell2.innerHTML = html;
+        
+        if (divObj.childNodes.length == 1)
+        {
+          cell2.innerHTML = html+'<input type="button" class="sc-btn btn30 sc-blueBg-btn mt10" value="添加" onclick="addAttr(this)" />';
+        }
+        else
+        {
+           cell2.innerHTML = html+'<input type="button" class="sc-btn btn30 sc-redBg-btn mt10" value="删除" onclick="dropAttr(this)" />';
+        }
+        
+        //var cell5 = row1.insertCell(-1);
+      
+        //var row2 = tableObj.insertRow(-1);
+        //var cell1 = row2.insertCell(-1);
+        //var cell2 = row2.insertCell(-1);
+        //cell2.style.borderBottom = '1px #000 dashed';
+        //cell2.colSpan = 3;
+        //var cell5 = row2.insertCell(-1);
+      }
+    
+      var row3 = tableObj.insertRow(-1);
+      //var cell1 = row3.insertCell(-1);
+      //cell1.innerHTML = '&nbsp;';
+      //cell1.className="label";
+      var cell2 = row3.insertCell(-1);
+      cell2.innerHTML = getQuantityHtml(key)+getPriceHtml(key)+getButtonHtml(key);
+      //var cell3 = row3.insertCell(-1);
+      //cell3.innerHTML = getPriceHtml(key);
+      //var cell4 = row3.insertCell(-1);
+      //cell4.innerHTML = getButtonHtml(key);
+      //var cell5 = row3.insertCell(-1);
+      //cell5.width = '10%';
+    }	
+/**
+ * @param object buttonObj
+ * @param int    tableIndex
+ */
+function addQuantityPrice(buttonObj, tableIndex)
+{
+  var tableObj = buttonObj.parentNode.parentNode.parentNode.parentNode;
+  var newRow = tableObj.insertRow(-1);
+  var cell2 = newRow.insertCell(-1);
+  cell2.innerHTML = '<label class="fl lh">{$lang.quantity}：</label><input name="quantity[' + tableIndex + '][]" type="text" class="text text_2 w100 mr10" value="0" autocomplete="off" /><label class="fl lh">{$lang.price}：</label><input name="price[' + tableIndex + '][]" type="text" class="text text_2 w100 mr10" value="0" autocomplete="off" /><input type="button" class="sc-btn btn30 sc-redBg-btn" value="删除" onclick="dropQuantityPrice(this)" />';
+}
+
+/**
+ * @param object buttonObj
+ */
+function dropQuantityPrice(buttonObj)
+{
+  var trObj = buttonObj.parentNode.parentNode;
+  var tableObj = trObj.parentNode.parentNode;
+  tableObj.deleteRow(trObj.rowIndex);
+}
+
+/**
+ * @param object buttonObj
+ */
+function addAttr(buttonObj)
+{
+  getGoodsInfo(document.getElementById('goods_id').value);
+}
+
+/**
+ * @param object buttonObj
+ */
+function dropAttr(buttonObj)
+{
+  var divObj = document.getElementById('price-div');
+  var tableObj = buttonObj.parentNode.parentNode.parentNode.parentNode;
+  divObj.removeChild(tableObj);
+}
+
+function getKey()
+{
+  var seedObj = document.getElementById('seed');
+  seedObj.value = parseInt(seedObj.value) + 1;
+  return seedObj.value;
+}
+
+function getQuantityHtml(key)
+    {
+      {/literal}
+      var html = '<label class="fl lh">{$lang.quantity}：</label><input name="quantity[#][]" type="text" value="" class="text text_2 mr10 w100" autocomplete="off" />';
+      {literal}
+    
+      return html.replace('[#]', '[' + key + ']');
+    }
+    
+    function getPriceHtml(key)
+    {
+      {/literal}
+      var html = '<label class="fl lh">{$lang.price}：</label><input name="price[#][]" type="text" value="" class="text text_2 mr10 w100" autocomplete="off" />';
+      {literal}
+    
+      return html.replace('[#]', '[' + key + ']');
+    }
+
+function getButtonHtml(key)
+    {
+      {/literal}
+      var html = '<input type="button" class="sc-btn btn30 sc-blueBg-btn" value="添加" onclick="addQuantityPrice(this, [#])" />';
+      {literal}
+    
+      return html.replace('[#]', key);
+    }
+//-->
+{/literal}
+</script>
+</body>
+</html>

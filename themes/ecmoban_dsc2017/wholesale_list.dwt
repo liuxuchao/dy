@@ -1,0 +1,366 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="Keywords" content="{$keywords}" />
+<meta name="Description" content="{$description}" />
+<!-- TemplateBeginEditable name="doctitle" -->
+<title>{$page_title}</title>
+<!-- TemplateEndEditable -->
+<!-- TemplateBeginEditable name="head" -->
+<!-- TemplateEndEditable -->
+<link rel="shortcut icon" href="favicon.ico" />
+<!-- #BeginLibraryItem "/library/js_languages_new.lbi" --><!-- #EndLibraryItem -->
+<link rel="stylesheet" type="text/css" href="themes/<?php echo $GLOBALS['_CFG']['template']; ?>/css/other/wholesale.css" />
+<link rel="stylesheet" type="text/css" href="../js/perfect-scrollbar/perfect-scrollbar.min.css" />
+</head>
+<body class="bg-ligtGary">
+<!-- #BeginLibraryItem "/library/page_header_common.lbi" --><!-- #EndLibraryItem -->
+
+<!--当前位置 start-->
+<div class="ecsc-breadcrumb w1200 pb0 w hide">
+    <!-- #BeginLibraryItem "/library/ur_here.lbi" --><!-- #EndLibraryItem -->
+</div>
+<!--当前位置 end-->
+
+<div id="content" class="pt0">
+	<div class="banner who_banner">
+    	<div class="w w1200">
+        	 {* DSC 提醒您：动态载入wholesale_ad.lbi，显示首页分类小广告 *}{insert name='get_adv_child' ad_arr=$wholesale_ad}
+        </div>
+    </div>
+    <div class="w w1200">
+    	<!-- {if $wholesale_list} 如果有批发商品 -->
+    	<div class="who-filler">
+        	<div class="wholesale-search">
+            	<form method="post" action="wholesale.php?act=list" name="wholesale_search">
+                    <div class="imitate_select w200">
+                    	<div class="cite"><span>全部分类</span><i class="iconfont icon-down"></i></div>
+                        <ul>
+                        	{foreach from=$categories_pro item="cat"}
+                        	<li><a href="javascript:void(0);" data-value="{$cat.id}">{$cat.nolinkname}</a></li>
+                            {/foreach}
+                        </ul>
+                        <input type="hidden" name="search_category" value="" id="search_category">
+                    </div>
+                    <input name="search_keywords" type="text" id="search_keywords" value="{$search_keywords|escape}" class="text" placeholder="{$lang.title_goods}"/>
+                    <input name="search" type="submit" value="{$lang.search}" class="go" />
+                    <input type="hidden" name="search_display" value="{$pager.display}" id="search_display" />
+                </form>
+            </div>
+        </div>
+    	<div class="wholesale-search w1200 w hide">
+            <form method="post" action="wholesale.php?act=list" name="wholesale_search">
+            	<div class="select">
+                <select name="search_category" id="search_category">
+                <option value="0">{$lang.all_category}</option>
+                {*$category_list*}
+				{foreach from=$categories_pro item="cat"}
+				<option value="{$cat.id}">{$cat.name}</option>
+                {/foreach}				
+                </select>
+                </div>
+                <input name="search_keywords" type="text" id="search_keywords" value="{$search_keywords|escape}" placeholder="{$lang.title_goods}"/>
+                <input name="search" type="submit" value="{$lang.search}" class="go" />
+                <input type="hidden" name="search_display" value="{$pager.display}" id="search_display" />
+            </form>
+        </div>
+        <!-- {foreach from=$wholesale_list item=wholesale} 循环批发商品开始 -->
+        <form name="wholesale_goods" class="wholesale_goods" action="wholesale.php?act=add_to_cart" method="post">
+        <div class="who-items">
+        	<div class="who-item">
+            	<div class="left">
+                	<div class="p-img"><a href="{$wholesale.preg_replace}" target="_blank"><img src="{$wholesale.goods_thumb}" alt="{$wholesale.goods_name}"></a></div>
+                    <div class="p-info">
+                    	<div class="p-name"><a href="{$wholesale.preg_replace}" target="_blank">{$wholesale.goods_name}</a></div>
+                        <div class="p-lie">
+                        	<p>市场价：{$wholesale.market_price}</p>
+                            <p>商城价：{$wholesale.shop_price}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="right" ectype="lieItems">
+                    <!-- {foreach from=$wholesale.price_ladder key=key item=attr_price name=price_ladder} -->
+                    {assign var="wholesale_num" value=$smarty.foreach.price_ladder.iteration}
+                	<div class="lie{if $smarty.foreach.price_ladder.iteration > 2} hide{/if}" ectype="lieItem">
+                    	<div class="row1">
+                            <!-- {if $attr_price.attr neq ''} -->
+                                <!-- {foreach from=$attr_price.attr key=attr_key item=attr_value} -->
+                                <div class="spec"><span>{$attr_value.attr_name}：</span><strong>{$attr_value.attr_val}</strong></div>
+                                <!-- {/foreach} -->
+                            <!--{else}-->
+                            <div class="spec"><span>&nbsp;</span><strong>&nbsp;</strong></div>
+                            <!-- {/if} -->
+                        </div>
+                        <div class="row2">
+                            <!-- {foreach from=$attr_price.qp_list key=qp_list_key item=qp_list_value} -->
+                            <div class="num"><span>数量：</span>{$qp_list_key}件</div>
+                            <!-- {/foreach} --> 
+                        </div>
+                        <div class="row3">
+                            <!-- {foreach from=$attr_price.qp_list key=qp_list_key item=qp_list_value} -->
+                        	<div class="price"><span>单价：</span>{$qp_list_value}元</div>
+                            <!-- {/foreach} --> 
+                        </div>
+                        <div class="row4">
+                            <!-- {if $attr_price.attr neq ''} -->
+                        	<div class="number">
+                                <a href="javascript:void(0)" class="decrement btn-reduce">-</a>
+                                <input name="goods_number[{$wholesale.act_id}][{$key}]" type="text" id="quantity" class="itxt buy-num" value="{$qp_list_key}" size="10" />
+                                <!-- {foreach from=$attr_price.attr key=attr_key1 item=attr_value1} -->
+                                <input name="attr_id[{$wholesale.act_id}][{$key}][{$attr_key1}][attr_id]" type="hidden" value="{$attr_value1.attr_id}"/>
+                                <input name="attr_id[{$wholesale.act_id}][{$key}][{$attr_key1}][attr_val_id]" type="hidden" value="{$attr_value1.attr_val_id}"/>
+                                <input name="attr_id[{$wholesale.act_id}][{$key}][{$attr_key1}][attr_name]" type="hidden" value="{$attr_value1.attr_name}"/>
+                                <input name="attr_id[{$wholesale.act_id}][{$key}][{$attr_key1}][attr_val]" type="hidden" value="{$attr_value1.attr_val}"/>
+                                <!-- {/foreach} -->
+                                <a href="javascript:void(0)" class="increment btn-add">+</a>
+                            </div>
+                            <!--{else}-->
+                            <div class="number">
+                                <a href="javascript:void(0)" class="decrement btn-reduce">-</a>
+                                <!-- {foreach from=$attr_price.qp_list key=qp_list_key item=qp_list_value name=list_key} -->
+                                <!--{if $smarty.foreach.list_key.index<1}-->
+                                <input name="goods_number[{$wholesale.act_id}]" type="text" id="quantity" class="itxt buy-num" value="{$qp_list_key}" size="10" />
+                                <!--{/if}-->
+                                <!--{/foreach}-->
+                                <a href="javascript:void(0)" class="increment btn-add">+</a>
+                            </div>
+                            <!--{/if}-->
+                        </div>
+                    </div>
+                    <!--{/foreach}-->
+                    {if $wholesale_num gt 2}
+                    <div class="lie_more">
+                    	<span ectype="lieMore"><i class="iconfont icon-down"></i></span>
+                    </div>
+                    {/if}
+                </div>
+                <div class="who-btn">
+                	{if in_array($wholesale.goods_id, $have)}
+                    <input type="submit" class="btn" value="已加入进货单" disabled="disabled" />
+                    {else}
+                	<input name="" type="submit" onClick="this.form.elements['act_id'].value = {$wholesale.act_id}" class="btn" value="加入进货单" />
+                    {/if}
+                </div>
+                <input type="hidden" name="act_id" value="" />
+                <input type="hidden" name="display" value="{$pager.display}" id="display" />
+            </div>
+        </div>
+        </form>
+        <!--{/foreach}-->
+     	<!-- #BeginLibraryItem "/library/pages.lbi" --><!-- #EndLibraryItem -->
+	
+    	<!-- {else} -->
+        <div class="no_records pl450">
+            <i class="no_icon_two"></i>
+            <div class="no_info">
+                <h3>{$lang.no_wholesale}</h3>
+            </div>
+        </div>
+        <!-- {/if} -->
+    </div>
+    <!-- {if $cart_goods_count gt 0} 如果有批发商品 -->
+    <div class="who-cart" ectype="whoBtn">
+    	<div class="number">{$cart_goods_count}</div>
+        <span>进货单</span>
+    </div>
+    <!--{/if}-->
+    
+    
+    <div id="whoDialog1" class="hide">
+        <form method="post" class="wholesale_goods wholesale_cart" name="form_name" action="wholesale.php?act=submit_order">
+            <div class="wd-warp">
+                <div class="wd-items">
+                    <!-- {foreach from=$cart_goods key=key item=goods name=name} 循环批发商品开始 -->
+                    <div class="wd-item{if $smarty.foreach.name.last} wd-item-last{/if}">
+                        <div class="wd-product-name">
+                            <div class="p-img"><a href="{$goods.preg_replace}" target="_blank"><img src="{$goods.goods_img}"></a></div>
+                            <div class="p-name"><a href="{$goods.preg_replace}" target="_blank">{$goods.goods_name}</a></div>
+                        </div>
+                        <div class="wd-info">
+                            <div class="lie">
+                                <div class="row row1">
+                                    <div class="spec">
+                                        {if $goods.goods_attr}
+                                        {$goods.goods_attr}
+                                        {else}
+                                        <span class="label">&nbsp;</span>
+                                        <span>&nbsp;</span>
+                                        {/if}
+                                    </div>
+                                </div>
+                                <div class="row row2">
+                                    <div class="num"><span class="label">数量：</span>{$goods.goods_number}件</div>
+                                </div>
+                                <div class="row row3">
+                                    <div class="price"><span class="label">批发价：</span>{$goods.formated_goods_price}</div>
+                                </div>
+                                <div class="row row4">
+                                    <div class="total">
+                                        <span class="label">小计：</span>
+                                        <span class="ftx-01">{$goods.formated_subtotal}</span>
+                                    </div>
+                                </div>
+                                <div class="row row5">
+                                    <a href="wholesale.php?act=drop_goods&key={$key}">删除</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--{/foreach}-->
+                    <div class="wd-item-more">
+                        <span ectype="wdItemMore"><i class="iconfont icon-down"></i></span>
+                    </div>
+                </div>
+                <div class="wd-desc">
+                    <div class="lie">
+                        <div class="item">
+                            <div class="label"><em class="ftx-01">*</em> 联系人：</div>
+                            <div class="value"><input type="text" name="consignee" class="text"></div>
+                        </div>
+                        <div class="item">
+                            <div class="label"> 配送方式：</div>
+                            <div class="value"><input type="text" name="shipping" class="text"></div>
+                        </div>
+                    </div>
+                    <div class="lie">
+                        <div class="item">
+                            <div class="label"><em class="ftx-01">*</em> 联系方式：</div>
+                            <div class="value"><input type="text" name="mobile" class="text"></div>
+                        </div>
+                        <div class="item">
+                            <div class="label"><em class="ftx-01">*</em> 付款方式：</div>
+                            <div class="value"><input type="text" name="pay_name" class="text"></div>
+                        </div>
+                    </div>
+                    <div class="lie">
+                        <div class="item">
+                            <div class="label">备注：</div>
+                            <div class="value">
+                                <textarea name="remarks" class="textarea"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="wd-end">
+                    <div class="prompt-text">注意：批发购物是不走购物流程，请如实填写信息</div>
+                    <input type="hidden" name="remark" value="">
+                    <a href="javascript:void(0);" class="btn sc-redBg-btn" ectype="wdCart">提交</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- #BeginLibraryItem "/library/page_footer.lbi" --><!-- #EndLibraryItem -->
+<script type="text/javascript" src="../js/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script type="text/javascript" src="themes/<?php echo $GLOBALS['_CFG']['template']; ?>/js/dsc-common.js"></script>
+<script type="text/javascript" src="themes/<?php echo $GLOBALS['_CFG']['template']; ?>/js/jquery.purebox.js"></script>
+<script type="text/javascript">
+	function quantity(){
+		$(".btn-reduce").click(function(){
+			var quantity = Number($(this).siblings('.buy-num').val());
+			if(quantity>1){
+				quantity-=1;
+				$(this).siblings('.buy-num').val(quantity);
+			}else{
+				return false;
+			}
+		});
+		
+		$(".btn-add").click(function(){
+			var quantity = Number($(this).siblings('.buy-num').val());
+			quantity+=1;
+			$(this).siblings('.buy-num').val(quantity);
+		})
+	}
+	quantity();
+	
+	{if $search_category > 0}
+	document.getElementById('search_category').value = '{$search_category}';
+	{/if}
+	
+	var right = 0;
+	var winWidth = $(window).width();
+	var width = $("*[ectype='whoBtn']").width();
+	
+	right = (winWidth-1200)/2 - width - 20;
+	 
+	$("*[ectype='whoBtn']").css({"right":right});
+	
+	$(window).resize(function(){
+		winWidth = $(window).width();
+		
+		if(winWidth < 1400){
+			right = 10;
+		}else{
+			right = (winWidth-1200)/2 - width - 20;
+		}
+		
+		$("*[ectype='whoBtn']").css({"right":right});
+	});
+	
+	$("*[ectype='whoBtn']").on("click",function(){
+		var content = $("#whoDialog1").html();
+		pb({
+			id:"whoDialog",
+			title:"我的进货单",
+			width:1040,
+			content:content,
+			drag:false,
+			foot:false
+		});
+	});
+	
+	$(document).on("click","*[ectype='wdCart']",function(){
+            
+		var frm  = $("#whoDialog form[name='form_name']");
+		var str = "";
+		var consignee = frm.find("input[name='consignee']").val();
+		var shipping  = frm.find("input[name='shipping']").val();
+		var mobile = frm.find("input[name='mobile']").val();
+		var pay_name = frm.find("input[name='pay_name']").val();
+		var remarks = frm.find("textarea[name='remarks']").val();
+		
+		if(consignee == ""){
+			pbDialog("联系人不能为空","",0);
+                        return false;
+		}else{
+                    str += "联系人:"+consignee+"，";
+                }
+                if(shipping == ""){
+			pbDialog("配送方式不能为空","",0);
+			return false;
+		}else{
+                    str += "配送方式："+shipping+"，";
+                }
+                if(mobile == ""){
+			pbDialog("联系方式不能为空","",0);
+			return false;
+		}else{
+                    
+                    var reg = /^1[0-9]{10}$/;
+                    if (!reg.test(mobile)){
+                       pbDialog("联系方式格式不正确","",0);
+			return false;
+                    }else{
+                        $("#phone_notice").html("<i></i>");
+                    }
+                    str += "联系方式："+mobile+"，";
+                }
+                
+                if(pay_name == ""){
+			pbDialog("付款方式不能为空","",0);
+			return false;
+		}else{
+                     str += "付款方式："+pay_name+"，";
+                }
+                str += "其他" + remarks
+			
+                        $("input[name='remark']").val(str);
+                    
+			frm.submit();   
+		
+	});
+</script>
+</body>
+</html>
