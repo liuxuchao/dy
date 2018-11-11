@@ -176,8 +176,18 @@
                                 <div class="step_content">
                                     <div class="item item_wenzi">
                                         <div class="step_label">{$lang.03_category_manage}：</div>
-                                        <div class="step_value"><span class="fl"></span><a href="javascript:;" class="edit_category" ectype="edit_category"><i class="icon icon-edit"></i></a><a href="javascript:void(0);" class="category_dialog">{$lang.add_extend_cat}</a></div>
-                                    </div>	
+                                        <div class="step_value">
+								<span class="fl"></span>
+								<a href="javascript:;" class="edit_category" ectype="edit_category"><i class="icon icon-edit"></i></a>
+								<a href="javascript:void(0);" class="category_dialog" >{$lang.add_extend_cat}</a>
+							 </div>
+                                    </div>
+						  <div class="item item_wenzi" id="ext_category_div" style="display:none;">
+                                        <div class="step_label">扩展分类：</div>
+                                        <div class="step_value">
+								<p class="ext_category_list" style="height:16px;line-height:16px;"></p>
+							 </div>
+                                    </div>			
                                     <!--{if $goods.user_id}-->
                                     <div class="item not_fl">
                                         <div class="step_label">{$lang.store_cat}：</div>
@@ -253,10 +263,49 @@
                                         <div class="step_label"><em class="require-field">*</em>{$lang.lab_bar_shop_price}：</div>
                                         <div class="step_value"><input type="text" name="shop_price" onBlur="priceSetted()" class="text w150" ectype="require" autocomplete="off"  value="{$goods.shop_price}"/><a href="javascript:void(0);" class="mr10" onclick="marketPriceSetted()">{$lang.marketPriceSetted}</a><div class="form_prompt"></div></div>
                                     </div>
-                                    <div class="item">
+									<div class="item">
                                         <div class="step_label">{$lang.lab_bar_market_price}：</div>
                                         <div class="step_value"><input type="text" name="market_price" class="text w150" autocomplete="off" value="{$goods.market_price}"/><a href="javascript:void(0);" onclick="integral_market_price()">{$lang.integral_market_price}</a></div>
                                     </div>
+									
+									
+									
+                                    <div class="item">
+                                        <div class="step_label">{$lang.new_add_detection}：</div>
+                                        <div class="step_value"><input type="text" name="detection" class="text w150" autocomplete="off" value="{$goods.detection}"/></div>
+                                    </div>
+									<div class="item">
+                                        <div class="step_label">{$lang.new_add_pMetal_content}：</div>
+                                        <div class="step_value"><input type="text" name="pMetal_content" class="text w150" autocomplete="off" value="{$goods.pMetal_content}"/></div>
+                                    </div>
+									<div class="item">
+                                        <div class="step_label">{$lang.new_add_gram_weight}：</div>
+                                        <div class="step_value"><input type="text" name="gram_weight" class="text w150" autocomplete="off" value="{$goods.gram_weight}"/></div>
+                                    </div>
+									<div class="item">
+                                        <div class="step_label">{$lang.new_add_new_brand}：</div>
+                                        <div class="step_value"><input type="text" name="new_brand" class="text w150" autocomplete="off" value="{$goods.new_brand}"/></div>
+                                    </div>
+									<div class="item">
+                                        <div class="step_label">{$lang.new_add_marks}：</div>
+                                        <div class="step_value"><input type="text" name="marks" class="text w150" autocomplete="off" value="{$goods.marks}"/></div>
+                                    </div>
+									<div class="item">
+                                        <div class="step_label">{$lang.new_add_certificate_number}：</div>
+                                        <div class="step_value"><input type="text" name="certificate_number" class="text w150" autocomplete="off" value="{$goods.certificate_number}"/></div>
+                                    </div>
+									<div class="item">
+                                        <div class="step_label">{$lang.new_add_batch_number}：</div>
+                                        <div class="step_value"><input type="text" name="batch_number" class="text w150" autocomplete="off" value="{$goods.batch_number}"/></div>
+                                    </div>
+									<div class="item">
+                                        <div class="step_label">{$lang.new_add_testing_institutions}：</div>
+                                        <div class="step_value"><input type="text" name="testing_institutions" class="text w150" autocomplete="off" value="{$goods.testing_institutions}"/></div>
+                                    </div>
+									
+									
+									
+									
                                     <div class="item">
                                         <div class="step_label">{$lang.lab_bar_cost_price}：</div>
                                         <div class="step_value"><input type="text" name="cost_price" class="text w150" autocomplete="off" value="{$goods.cost_price}"/></div>
@@ -501,6 +550,35 @@
                                                         </div>
                                                         <input type="hidden" name="desc_mobile" value='{$goods.desc_mobile}' />
                                                     </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+							<div class="step">
+                                <div class="step_title"><i class="ui-step"></i><h3>质量、保险、保养</h3></div>
+                                <div class="step_content">
+                                	<div class="tabs_desc">
+                                    	<ul class="ui-tabs-nav">
+                                        	<li class="current"><a href="javascript:void(0);">质量保险</a></li>
+                                            <li><a href="javascript:void(0);">知识产权</a></li>
+                                            <li><a href="javascript:void(0);">保养知识</a></li>
+                                        </ul>
+                                        <div class="panel-main gallery_album" ectype="gallery_album_list" data-inid="gallery_album_dsc" data-act="gallery_album_list">
+                                            <div class="panel panel-pc">
+                                                <div id="FCKeditor1">
+                                                {$FCKeditor1}
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-pc">
+                                                <div id="FCKeditor2">
+                                                {$FCKeditor2}
+                                                </div>
+                                            </div>
+											<div class="panel panel-pc">
+                                                <div id="FCKeditor3">
+                                                {$FCKeditor3}
                                                 </div>
                                             </div>
                                         </div>
@@ -2372,6 +2450,9 @@
 			var div = "<span class='filter_item'><span>"+str+"</span><a herf='javascript:void(0);' class='delete'></a>";
 			div += "<input type='hidden' name='other_cat[]' value='"+cat_id+"'></span>";
 			thisObj.find(".filter").append(div);
+			$(".ext_category_list").html('');//fl ext_category_list  lxc_add
+			$(".ext_category_list").html(thisObj.find(".filter").html());//fl ext_category_list  lxc_add
+			$("#ext_category_div").css("display","block");
 			deal_extension_category(this, goods_id, cat_id, 'add'); //ajax添加扩展分类
 		}
 	});
@@ -2380,6 +2461,15 @@
 		var cat_id = $(this).siblings("input").val();
 		deal_extension_category(this, goods_id, cat_id, 'delete'); //ajax删除扩展分类
 		$(this).parent().remove();
+	});
+	$(document).on("click","#ext_category_div .delete",function(){
+		var cat_id = $(this).siblings("input").val();
+		deal_extension_category(this, goods_id, cat_id, 'delete'); //ajax删除扩展分类
+		$(this).parent().remove();
+		if($("#ext_category_list").text() == ''){
+			$("#ext_category_div").css("display","none");
+		}
+		
 	});
 	/* 处理扩展分类 by wu end */
 
@@ -2767,6 +2857,18 @@
 					//商品描述
 					if(data['goods_info']['goods_desc']){
 						$("#FCKeditor").html(data['goods_info']['goods_desc']);
+					}
+					//质量保险
+					if(data['goods_info']['goods_zhiliang']){
+						$("#FCKeditor1").html(data['goods_info']['goods_zhiliang']);
+					}
+					//知识产权
+					if(data['goods_info']['goods_chanquan']){
+						$("#FCKeditor2").html(data['goods_info']['goods_chanquan']);
+					}
+					//保养知识
+					if(data['goods_info']['goods_baoyang']){
+						$("#FCKeditor3").html(data['goods_info']['goods_baoyang']);
 					}
 					
 					inputVal(data['goods_info']);

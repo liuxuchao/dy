@@ -1603,6 +1603,7 @@ elseif ($_REQUEST['act'] == 'del_link_desc')
 
 elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
 {
+
     $code = empty($_REQUEST['extension_code']) ? '' : trim($_REQUEST['extension_code']);
     $_POST['goods_sn'] = isset($_POST['goods_sn']) && !empty($_POST['goods_sn']) ? dsc_addslashes(trim($_POST['goods_sn'])) : '';
     
@@ -1768,6 +1769,19 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
     $cost_price = !empty($_POST['cost_price']) ? trim($_POST['cost_price']) : 0;
     $cost_price = floatval($cost_price);	
 
+	/*lxc add start */
+	$detection = !empty($_POST['detection']) ? trim($_POST['detection']) : '';
+	$pMetal_content = !empty($_POST['pMetal_content']) ? trim($_POST['pMetal_content']) : '';
+	$gram_weight = !empty($_POST['gram_weight']) ? trim($_POST['gram_weight']) : '';
+	$new_brand = !empty($_POST['new_brand']) ? trim($_POST['new_brand']) : '';
+	$marks = !empty($_POST['marks']) ? trim($_POST['marks']) : '';
+	$certificate_number = !empty($_POST['certificate_number']) ? trim($_POST['certificate_number']) : '';
+	$batch_number = !empty($_POST['batch_number']) ? trim($_POST['batch_number']) : '';
+	$testing_institutions = !empty($_POST['testing_institutions']) ? trim($_POST['testing_institutions']) : '';
+	/*lxc add end */
+	
+	
+	
     //ecmoban模板堂 --zhuo satrt
     if (!isset($_POST['is_promote'])) {
         $is_promote = 0;
@@ -1928,6 +1942,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
                     ", group_number, store_new, store_hot, store_best, goods_cause" .
                     ", goods_product_tag, goods_tag, is_volume, is_fullcut" . $where_drp_sql . $freight_insert_key . //商品运费 by wu
                     ", is_xiangou, xiangou_num, xiangou_start_date, xiangou_end_date, largest_amount, pinyin_keyword,stages,stages_rate,goods_unit" .//@author bylu 白条分期;
+                    ", detection,pMetal_content,gram_weight,new_brand,marks,certificate_number,batch_number,testing_institutions" .//@author lxc 新增字段;
                     ")" .
                 "VALUES ('$goods_name', '$goods_name_style', '$goods_sn', '$goods_video', '$bar_code', '$catgory_id'," .
                     "'$user_cat', '$brand_id', '$shop_price', '$market_price', '$cost_price', '$is_promote','$promote_price', ".
@@ -1939,7 +1954,10 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
                     ", '$group_number', '$store_new', '$store_hot', '$store_best', '$goods_cause'" .
                     ", '$_POST[goods_product_tag]', '$_POST[goods_tag]', '$is_volume', '$is_fullcut'" . $where_drp_val . $freight_insert_val . //商品运费 by wu
                     ", '$is_xiangou', '$xiangou_num', '$xiangou_start_date', '$xiangou_end_date', '$largest_amount', '$pinyin','$stages','$stages_rate','$goods_unit'" .//@author bylu 白条分期;
-                    ")";
+                    ", '$detection','$pMetal_content','$gram_weight','$new_brand','$marks','$certificate_number','$batch_number','$testing_institutions'" .//@author lxc 新增字段;
+					")";
+		file_put_contents("./11-11-1.txt", var_export($_POST,true)."\r\n\r\n",FILE_APPEND);
+		file_put_contents("./11-11-11.txt", $sql."\r\n\r\n",FILE_APPEND);
         }
         else
         {
@@ -1954,7 +1972,8 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
                      ", group_number, store_new, store_hot, store_best, goods_cause" .
                     ", goods_product_tag, goods_tag, is_volume, is_fullcut" . $where_drp_sql . $freight_insert_key . //商品运费 by wu
                     ", is_xiangou, xiangou_num, xiangou_start_date, xiangou_end_date, largest_amount, pinyin_keyword,stages,stages_rate,goods_unit" .//@author bylu 白条分期;
-                    ")" .
+                    ", detection,pMetal_content,gram_weight,new_brand,marks,certificate_number,batch_number,testing_institutions" .//@author lxc 新增字段;
+					")" .
                 "VALUES ('$goods_name', '$goods_name_style', '$goods_sn', '$goods_video', '$bar_code', '$catgory_id', " .
                     "'$user_cat', '$brand_id', '$shop_price', '$market_price', '$cost_price', '$is_promote','$promote_price', ".
                     "'$promote_start_date', '$promote_end_date', '$goods_img', '$goods_thumb', '$original_img', ".
@@ -1966,7 +1985,10 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
                     ", '$group_number', '$store_new', '$store_hot', '$store_best', '$goods_cause'" .
                     ", '$_POST[goods_product_tag]', '$_POST[goods_tag]', '$is_volume', '$is_fullcut'" . $where_drp_val . $freight_insert_val . //商品运费 by wu
                     ", '$is_xiangou', '$xiangou_num', '$xiangou_start_date', '$xiangou_end_date', '$largest_amount', '$pinyin','$stages','$stages_rate','$goods_unit'" .//@author bylu 白条分期;
-                    ")";
+                    ", '$detection','$pMetal_content','$gram_weight','$new_brand','$marks','$certificate_number','$batch_number','$testing_institutions'" .//@author lxc 新增字段;
+					")";
+			file_put_contents("./11-11-22.txt", var_export($_POST,true)."\r\n\r\n",FILE_APPEND);
+			file_put_contents("./11-11-2.txt", $sql."\r\n\r\n",FILE_APPEND);
         }
         		
         //库存日志
@@ -2037,6 +2059,17 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
 
                 "user_cat = '$user_cat', ".
                 
+				/*新增字段 start author lxc*/
+				"detection='$detection',".
+				"pMetal_content='$pMetal_content',".
+				"gram_weight='$gram_weight',".
+				"new_brand='$new_brand',".
+				"marks='$marks',".
+				"certificate_number='$certificate_number',".
+				"batch_number='$batch_number',".
+				"testing_institutions='$testing_institutions',".
+				/*新增字段 end*/
+				
                 $where_drp_up .
 				
                 $freight_update_data . //商品运费 by wu
@@ -2045,6 +2078,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
                 "promote_start_date = '$promote_start_date', " .
                 "suppliers_id = '$suppliers_id', " .
                 "promote_end_date = '$promote_end_date', ";
+				
         
         /* 如果有上传图片，需要更新数据库 */
         if ($goods_img)
@@ -2169,7 +2203,6 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
 
         $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('goods_change_log'), $logs_change, 'INSERT');
     }
-    
     $res = $db->query($sql);
 
     /* 商品编号 */

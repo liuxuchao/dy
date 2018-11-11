@@ -1,5 +1,4 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
 <div class="panel-body">
     <div class="panel-tit"><span>{$title.fields_titles}</span></div>
     <div class="cue">{$title.titles_annotation}</div>
@@ -16,6 +15,7 @@
                     <ul>
                         <li><a href="javascript:void(0);" data-value="0">{$lang.Please_select}</a></li>
                         <!--{foreach from=$title.first_cate item=cate}-->
+						
                         <li><a href="javascript:void(0);" data-value="{$cate.cat_id}">{$cate.cat_name}</a></li>
                         <!--{/foreach}-->
                     </ul>

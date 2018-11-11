@@ -474,7 +474,7 @@ function selectChildCate(val,type,cateArr){
 		cateArr = '';
 	}
 
-	Ajax.call('merchants_steps.php?step=addChildCate', 'cat_id=' + val + '&type=' + type + '&cateArr=' + $.toJSON(cateArr),function(result){
+	Ajax.call('merchants_steps.php?step=addChildCate', 'cat_id=' + val + '&is_just_show=1&type=' + type + '&cateArr=' + $.toJSON(cateArr),function(result){
 		if(result.error == 1){
 			pbDialog(result.message,"",0);
 			location.href = 'user.php';

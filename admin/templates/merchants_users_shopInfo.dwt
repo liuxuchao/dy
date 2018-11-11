@@ -120,13 +120,13 @@
 										<div class="label">{$lang.is_close_store}：</div>
 										<div class="value">
                                         	<div class="checkbox_items">
-                                            	<div class="checkbox_item">
+                                            	<div class="checkbox_item" style="width:80px;">
                                                     <input name="shop_close" type="radio" value="0" class="ui-radio" id="shop_close_yes" {if $merchants.shop_close eq 0}checked="checked"{/if}/>
-                                                    <label for="shop_close_yes" class="ui-radio-label">{$lang.close}</label>
+                                                    <label for="shop_close_yes" class="ui-radio-label">关闭店铺</label>
                                                 </div>
-                                                <div class="checkbox_item">
+                                                <div class="checkbox_item" style="width:80px;">
                                                     <input name="shop_close" type="radio" value="1" class="ui-radio" id="shop_close_no"  {if $merchants.shop_close eq 1}checked="checked"{/if} />
-                                                    <label for="shop_close_no" class="ui-radio-label">{$lang.open}</label>
+                                                    <label for="shop_close_no" class="ui-radio-label">开启店铺</label>
                                                 </div>
                                             </div>
 										</div>

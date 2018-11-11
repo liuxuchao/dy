@@ -56,7 +56,7 @@ if(empty($sid)){
 if ($step == 'addChildCate') { 
     $cat_id = isset($_REQUEST['cat_id']) ? trim($_REQUEST['cat_id']) : 0;
     $type = isset($_REQUEST['type']) ? intval($_REQUEST['type']) : 0;
-
+    $is_just_show = isset($_REQUEST['is_just_show']) ? intval($_REQUEST['is_just_show']) : 0;
     $json = new JSON;
     $result = array('error' => 0, 'message' => '', 'content' => '', 'cat_id' => '');
 
@@ -69,12 +69,10 @@ if ($step == 'addChildCate') {
             $catarr = $cat->cat_id;
         }
 
-        $cate_list = get_first_cate_list($cat_id, $type, $catarr, $user_id);
-        
+        $cate_list = get_first_cate_list($cat_id, $type, $catarr, $user_id,$is_just_show);
         if(!$cat_id){
             $cate_list = array();
         }
-        
         $smarty->assign('cate_list', $cate_list);
         $smarty->assign('cat_id', $cat_id);
         $result['content'] = $smarty->fetch("library/merchants_cate_list.lbi");
@@ -379,7 +377,6 @@ if (!$smarty->is_cached('merchants_steps.dwt'))
             $smarty->assign('permanent_list',        $permanent_list);		
 
             $steps_title = get_root_merchants_steps_title($process['id'], $user_id);
-
             $smarty->assign('steps_title',         $steps_title);  // 流程表单信息
 
             $sql = "SELECT COUNT(*) FROM " . $ecs->table('merchants_steps_process') . " WHERE process_title " .db_create_in(['添加品牌', '添加品牌']). " AND is_show = 1";

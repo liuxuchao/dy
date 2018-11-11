@@ -5081,7 +5081,94 @@
             <div class="user-title">
                 <h2>{$lang.bonus}</h2>
             </div>
-            <div class="user-bonus-warp">
+            <div class="user-bonus-temp" ectype="tabSection">
+                <div class="user-title">
+                    <ul class="tabs" ectype="tabs">
+                        <li id="bound_giftcard" class="active"><a href="javascript:void(0);">{$lang.keyong}({$bonus.record_count})</a></li>
+                        <li id="upcoming_giftcard"><a href="javascript:void(0);">{$lang.About_expire}({$bonus1.record_count})</a></li>
+                        <li id="over_giftcard"><a href="javascript:void(0);">{$lang.have_been_exhausted}({$bonus2.record_count})</a></li>
+                    </ul>
+                </div>
+                <div class="user-bonus-info" ectype="tabContent">
+                    <div id="gift_card_list_1">
+                        <!-- {if $bonus.available_list} -->
+                        <div class="items">
+                        <!--{foreach from=$bonus.available_list item=item name=available_list}-->
+                            <div class="item{if $smarty.foreach.available_list.iteration % 3 == 0} item-last{/if}">
+                                <div class="b-price">{$item.type_money}</div>
+                                <div class="b-i-bot">
+                                    <div class="storeName">{$item.shop_name}</div>
+                                    <p>{if $item.bonus_sn neq '0'  }{$lang.card_number_label}：{$item.bonus_sn} - {/if}{$lang.order_limit}：{$item.min_goods_amount}</p>
+                                    <p>{$item.use_startdate} ~ {$item.use_enddate}</p>
+                                </div>
+                                {if $item.usebonus_type}<i class="i-soon">{$lang.general_audience}</i>{/if}
+                            </div>
+                        <!--{/foreach}-->
+                        </div>
+                        <!--{else}-->
+                        <div class="no_records">
+                            <i class="no_icon_two"></i>
+                            <div class="no_info">
+                                <h3>{$lang.no_bonus_keyong}</h3>
+                            </div>
+                        </div>
+                        <!--{/if} -->
+                        {if $bonus.record_count > $size}<div class="pages"><div class="pages-it">{$bonus.paper}</div></div>{/if}
+                    </div>
+                    <div id="gift_card_list_2" style=" display:none">
+                    <!-- {if $bonus1.expire_list} -->
+                        <div class="items">
+                        <!--{foreach from=$bonus1.expire_list item=item name=expire_list}-->
+                        <div class="item{if $smarty.foreach.expire_list.iteration % 3 == 0} item-last{/if}">
+                            <div class="b-price">{$item.type_money}</div>
+                            <div class="b-i-bot">
+                                <div class="storeName">{$item.shop_name}</div>
+                                <p>{if $item.bonus_sn neq '0' }{$lang.card_number_label}：{$item.bonus_sn} -{/if} {$lang.order_limit}：{$item.min_goods_amount}</p>
+                                <p>{$item.use_startdate} ~ {$item.use_enddate}</p>
+                            </div>
+                            <i class="i-soon">{$lang.About_expire}</i>
+                        </div>
+                        <!--{/foreach}-->
+                        </div>
+                    <!--{else}-->
+                    <div class="no_records">
+                        <i class="no_icon_two"></i>
+                        <div class="no_info">
+                            <h3>{$lang.no_bonus_daoqi}</h3>
+                        </div>
+                    </div>
+                    <!-- {/if} -->
+                    </div>
+                    <div id="gift_card_list_3" style=" display:none">
+                    <!-- {if $bonus2.useup_list} -->
+                        <div class="items">
+                        <!--{foreach from=$bonus2.useup_list item=item name=useup_list}-->
+                        <div class="item item-disabled{if $smarty.foreach.useup_list.iteration % 3 == 0} item-last{/if}">
+                            <div class="b-price">{$item.type_money}</div>
+                            <div class="b-i-bot">
+                                <div class="storeName">{$item.shop_name}</div>
+                                <p>{if $item.bonus_sn neq '0' }{$lang.card_number_label}：{$item.bonus_sn} - {/if} {$lang.order_limit}：{$item.min_goods_amount}</p>
+                                <p>{$item.use_startdate} ~ {$item.use_enddate}</p>
+                            </div>
+                            <i class="i-soon">{$lang.had_use}</i>
+                        </div>
+                        <!--{/foreach}-->
+                        </div>
+                    <!--{else}-->
+                    <div class="no_records">
+                        <i class="no_icon_two"></i>
+                        <div class="no_info">
+                            <h3>{$lang.no_bonus_end}</h3>
+                        </div>
+                    </div>
+                    <!-- {/if} -->
+                    </div>
+                </div>
+            </div>
+		<div class="user-title">
+                <h2>绑定红包</h2>
+            </div>
+		<div class="user-bonus-warp">
                 <form action="" method="post">
                 <div class="user-items">
                     <div class="item">
@@ -5113,90 +5200,6 @@
                     </div>          
                 </div>
                 </form>
-            </div>
-            <div class="user-bonus-temp" ectype="tabSection">
-                <div class="user-title">
-                    <ul class="tabs" ectype="tabs">
-                        <li id="bound_giftcard" class="active"><a href="javascript:void(0);">{$lang.keyong}({$bonus.record_count})</a></li>
-                        <li id="upcoming_giftcard"><a href="javascript:void(0);">{$lang.About_expire}({$bonus1.record_count})</a></li>
-                        <li id="over_giftcard"><a href="javascript:void(0);">{$lang.have_been_exhausted}({$bonus2.record_count})</a></li>
-                    </ul>
-                </div>
-                <div class="user-bonus-info" ectype="tabContent">
-                    <div id="gift_card_list_1">
-                        <!-- {if $bonus.available_list} -->
-                        <div class="items">
-                        <!--{foreach from=$bonus.available_list item=item name=available_list}-->
-                            <div class="item{if $smarty.foreach.available_list.iteration % 3 == 0} item-last{/if}">
-                                <div class="b-price">{$item.type_money}</div>
-                                <div class="b-i-bot">
-                                    <div class="storeName">{$item.shop_name}</div>
-                                    <p>{$lang.card_number_label}：{$item.bonus_sn|default:N/A} - {$lang.order_limit}：{$item.min_goods_amount}</p>
-                                    <p>{$item.use_startdate} ~ {$item.use_enddate}</p>
-                                </div>
-                                {if $item.usebonus_type}<i class="i-soon">{$lang.general_audience}</i>{/if}
-                            </div>
-                        <!--{/foreach}-->
-                        </div>
-                        <!--{else}-->
-                        <div class="no_records">
-                            <i class="no_icon_two"></i>
-                            <div class="no_info">
-                                <h3>{$lang.no_bonus_keyong}</h3>
-                            </div>
-                        </div>
-                        <!--{/if} -->
-                        {if $bonus.record_count > $size}<div class="pages"><div class="pages-it">{$bonus.paper}</div></div>{/if}
-                    </div>
-                    <div id="gift_card_list_2" style=" display:none">
-                    <!-- {if $bonus1.expire_list} -->
-                        <div class="items">
-                        <!--{foreach from=$bonus1.expire_list item=item name=expire_list}-->
-                        <div class="item{if $smarty.foreach.expire_list.iteration % 3 == 0} item-last{/if}">
-                            <div class="b-price">{$item.type_money}</div>
-                            <div class="b-i-bot">
-                                <div class="storeName">{$item.shop_name}</div>
-                                <p>{$lang.card_number_label}：{$item.bonus_sn|default:N/A} - {$lang.order_limit}：{$item.min_goods_amount}</p>
-                                <p>{$item.use_startdate} ~ {$item.use_enddate}</p>
-                            </div>
-                            <i class="i-soon">{$lang.About_expire}</i>
-                        </div>
-                        <!--{/foreach}-->
-                        </div>
-                    <!--{else}-->
-                    <div class="no_records">
-                        <i class="no_icon_two"></i>
-                        <div class="no_info">
-                            <h3>{$lang.no_bonus_daoqi}</h3>
-                        </div>
-                    </div>
-                    <!-- {/if} -->
-                    </div>
-                    <div id="gift_card_list_3" style=" display:none">
-                    <!-- {if $bonus2.useup_list} -->
-                        <div class="items">
-                        <!--{foreach from=$bonus2.useup_list item=item name=useup_list}-->
-                        <div class="item item-disabled{if $smarty.foreach.useup_list.iteration % 3 == 0} item-last{/if}">
-                            <div class="b-price">{$item.type_money}</div>
-                            <div class="b-i-bot">
-                                <div class="storeName">{$item.shop_name}</div>
-                                <p>{$lang.card_number_label}：{$item.bonus_sn|default:N/A} - {$lang.order_limit}：{$item.min_goods_amount}</p>
-                                <p>{$item.use_startdate} ~ {$item.use_enddate}</p>
-                            </div>
-                            <i class="i-soon">{$lang.had_use}</i>
-                        </div>
-                        <!--{/foreach}-->
-                        </div>
-                    <!--{else}-->
-                    <div class="no_records">
-                        <i class="no_icon_two"></i>
-                        <div class="no_info">
-                            <h3>{$lang.no_bonus_end}</h3>
-                        </div>
-                    </div>
-                    <!-- {/if} -->
-                    </div>
-                </div>
             </div>
             <div class="user-prompt mt20">
                 <div class="tit"><span>{$lang.bonus}{$lang.reminder}</span><i class="iconfont icon-down"></i></div>

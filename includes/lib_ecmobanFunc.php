@@ -1469,7 +1469,7 @@ function get_root_merchants_steps_title($pid, $user_id) {
             }
             //2014-11-19 end
 
-            $arr[$key]['first_cate'] = get_first_cate_list(0, 0, array(), $_SESSION['user_id']);
+            $arr[$key]['first_cate'] = get_first_cate_list(0, 0, array(), $_SESSION['user_id'],1);
             $catId_array = get_catId_array();
 
             $parent['user_shopMain_category'] = implode('-', $catId_array);
@@ -1876,7 +1876,7 @@ function get_setps_form_insert_date($formName) {
 //会员申请商家入驻表单填写数据插入 end
 
 //一级类目列表
-function get_first_cate_list($parent_id = 0, $type = 0, $catarr = array(), $user_id = 0) {
+function get_first_cate_list($parent_id = 0, $type = 0, $catarr = array(), $user_id = 0,$is_just_show=0) {
     if ($type == 1) {
 
         for ($i = 0; $i < count($catarr); $i++) {
@@ -1888,8 +1888,11 @@ function get_first_cate_list($parent_id = 0, $type = 0, $catarr = array(), $user
 
         return array();
     } else {
-        $sql = "SELECT cat_id, cat_name FROM " . $GLOBALS['ecs']->table('category') . " where parent_id = '$parent_id'";
-
+		if($is_just_show==1){
+			$sql = "SELECT cat_id, cat_name FROM " . $GLOBALS['ecs']->table('category') . " where parent_id = '$parent_id' and is_show=1";
+		}else{
+			$sql = "SELECT cat_id, cat_name FROM " . $GLOBALS['ecs']->table('category') . " where parent_id = '$parent_id'";
+		}
         return $GLOBALS['db']->getAll($sql);
     }
 }
