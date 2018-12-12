@@ -568,17 +568,17 @@
                                         <div class="panel-main gallery_album" ectype="gallery_album_list" data-inid="gallery_album_dsc" data-act="gallery_album_list">
                                             <div class="panel panel-pc">
                                                 <div id="FCKeditor1">
-                                                {$FCKeditor1}
+                                                {$FCKeditor_zhiliang}
                                                 </div>
                                             </div>
                                             <div class="panel panel-pc">
                                                 <div id="FCKeditor2">
-                                                {$FCKeditor2}
+                                                {$FCKeditor_chanquan}
                                                 </div>
                                             </div>
 											<div class="panel panel-pc">
                                                 <div id="FCKeditor3">
-                                                {$FCKeditor3}
+                                                {$FCKeditor_baoyang}
                                                 </div>
                                             </div>
                                         </div>

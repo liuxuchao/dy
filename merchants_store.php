@@ -494,6 +494,7 @@ if(!empty($seo['title'])){
 $smarty->assign("rec_id",$rec_id);
 $smarty->assign("collect_store",$rec_id);
 
+
 //判断商家使用模板
 if($temp_code){
     $templates_mode = 1;

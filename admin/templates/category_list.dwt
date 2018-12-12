@@ -107,15 +107,18 @@
 		</div>
 	</div>
 	{include file ='library/pagefooter.lbi'}
+    <script src="js/layer/layer.js"></script>
     <script type="text/javascript">
 		//转移分类
 		$(document).on('click',"*[ectype='transfer_goods']",function(){
-       		if(confirm(catename_level_transfer_yes)){
+       		if(layer.confirm(catename_level_transfer_yes,{
+       			btn:['转移','取消']
+       		})){
 			var cat_id = $(this).data("cid");
 			$.jqueryAjax("category.php", "act=move&cat_id="+cat_id, function(data){
 				var content = data.content;
 				if(data.error == 1){
-					alert(data.message);
+					layer.alert(data.message);
 					return false;
 				}
 				pb({
@@ -141,17 +144,19 @@
 		});
 		
 		function remove_cat(cat_id,level){
-			if (confirm(is_delete_info)) {
-			   Ajax.call('category.php?is_ajax=1&act=remove', "cat_id="+cat_id+"&level="+level, remove_catResponse, "GET", "JSON");
-			}
+			layer.confirm(is_delete_info,{
+				btn:['删除','取消']
+			},function(){
+				Ajax.call('category.php?is_ajax=1&act=remove', "cat_id="+cat_id+"&level="+level, remove_catResponse, "GET", "JSON");
+			})
 		}
 	
 		function remove_catResponse(result){
 			if(result.error == 2){
-				alert(result.massege);
+				layer.alert(result.massege);
 			}
 			else if(result.error == 1){
-				alert(result.message);
+				layer.alert(result.message);
 			}
 			else{
 				window.location.reload();

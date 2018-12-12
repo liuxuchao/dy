@@ -89,7 +89,7 @@ elseif ($_REQUEST['act'] == 'signin')
 {
     
     $_POST = get_request_filter($_POST, 1);
-
+	
     $_POST['username'] = INPUT_I('post.username', '');
     $_POST['password'] = INPUT_I('post.password', '');
     $_POST['username'] = !empty($_POST['username']) ? str_replace(array("=", " "), '', $_POST['username']) : '';
@@ -142,6 +142,7 @@ elseif ($_REQUEST['act'] == 'signin')
     }
 	
     $sql="SELECT `ec_salt` FROM ". $ecs->table('admin_user') ."WHERE user_name = '" . $_POST['username']."'";
+
     $ec_salt =$db->getOne($sql, true);
 	
     if(!empty($ec_salt))
@@ -158,8 +159,9 @@ elseif ($_REQUEST['act'] == 'signin')
             " FROM " . $ecs->table('admin_user') .
             " WHERE user_name = '" . $_POST['username']. "' AND password = '" . md5($_POST['password']) . "'";
     }
+	
     $row = $db->getRow($sql);
-    
+
     if ($row)
     {
         // 检查是否为供货商的管理员 所属供货商是否有效

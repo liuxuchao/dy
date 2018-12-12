@@ -186,15 +186,26 @@ var {$key} = "{$item}";
                                 </div>
                                 <div class="input-tip"></div>
                             </div>
+
                             <!-- {else} -->
-                            {if $field.reg_field_name neq $lang.mobile}
-                            <div class="item">
-                                <div class="item-label">{$field.reg_field_name}</div>
-                                <div class="item-info">
-                                    <input name="extend_field{$field.id}" id="extend_field{$field.id}" type="text" maxlength="35" class="text"{if $field.is_need} required data-msg="<i class='iconfont icon-minus-sign'></i>此处是必填字段"{/if} autocomplete="off" />
-                                </div>
-                                <div class="input-tip"><span class="extend_field{$field.id}"></span></div>
-                            </div>
+                            {if $field.reg_field_name neq $lang.mobile && $field.reg_field_name neq '手机验证码'}
+								<div class="item">
+									<div class="item-label">{$field.reg_field_name}</div>
+									<div class="item-info">
+										<input name="extend_field{$field.id}" id="extend_field{$field.id}" type="text" maxlength="35" class="text"{if $field.is_need} required data-msg="<i class='iconfont icon-minus-sign'></i>此处是必填字段"{/if} autocomplete="off" />
+									</div>
+									<div class="input-tip"><span class="extend_field{$field.id}"></span></div>
+								</div>
+							{else if $field.reg_field_name neq $lang.mobile && $field.reg_field_name eq '手机验证码'}
+								<div class="item">
+									<div class="item-label">{$field.reg_field_name}</div>
+									<div class="item-info phone_code">
+										<input name="sms_value" id="sms_value" type="hidden" value="sms_find_signin" autocomplete="off" />
+										<input type="text" id="sms" name="mobile_code" class="text text-2"  maxlength="6" value="" autocomplete="off" placeholder="{$lang.msg_mobile_code}"/>
+										<a href="javascript:sendSms();" id="zphone" class="sms-btn">{$lang.get_verification_code}</a>
+									</div>
+									<div class="input-tip"></div>
+								</div>
                             {/if}
                             <!-- {/if} -->
                             <!-- {/foreach} -->

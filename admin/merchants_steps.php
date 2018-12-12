@@ -31,7 +31,6 @@ if ($_REQUEST['act'] == 'list') {
     $smarty->assign('action_link', array('text' => $_LANG['02_merchants_add'], 'href' => 'merchants_steps.php?act=add'));
 
     $process_list = steps_process_list();
-
     $smarty->assign('process_list', $process_list['process_list']);
     $smarty->assign('filter', $process_list['filter']);
     $smarty->assign('record_count', $process_list['record_count']);

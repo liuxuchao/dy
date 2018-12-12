@@ -783,7 +783,6 @@ if (!$smarty->is_cached('goods.dwt', $cache_id)) {
         }
 
         $basic_info = get_shop_info_content($goods['user_id']);
-
         /*  @author-bylu 判断当前商家是否允许"在线客服" start */
         $shop_information = get_shop_name($goods['user_id']);
         $shop_information['kf_tel'] = $db->getOne("SELECT kf_tel FROM " . $ecs->table('seller_shopinfo') . "WHERE ru_id = '" . $goods['user_id'] . "'");

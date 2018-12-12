@@ -3,13 +3,26 @@
     <header class="dis-box header-menu n-header-menu b-color color-whie new-goods-nav ts-5">
                 <h3 class="box-flex">
         <nav class="n-goods-shop-list-nav box-flex swiper-container-horizontal goods-list-nav-new">
-            <ul class="swiper-wrapper  dis-box text-c">
-                     <a class="a-icon-back box-flex left"  href="javascript:history.go(-1);"><i class="iconfont icon-jiantou col-7"></i></a>
-              <li class="div1 box-flex swiper-slide  position-rel swiper-slide-active" category="1"><a class="product-div-link" href="{url('goods/index/index', array('id'=>$goods_id))}"></a>商品</li>
-              <li class="div3 box-flex swiper-slide position-rel swiper-slide-next" category="3"><a class="product-div-link" href="{url('goods/index/index', array('id'=>$goods_id,'referer'=>'comment'))}"></a>详情</li>
-              <li class="div4 box-flex swiper-slide active position-rel" category="4"><a class="product-div-link" href="{url('goods/index/comment', array('id'=>$goods_id))}"></a>评论</li>
-              <a class="box-flex right j-sharing" href="javascript:;"><i class="iconfont icon-fenxiang col-7"></i></a>
-            </ul>
+				<ul class="swiper-wrapper  dis-box text-c goods-ul">
+					<a class="a-icon-back box-flex left"  href="javascript:history.go(-1);"><i class="iconfont icon-jiantou col-7"></i></a>
+					<li class="div1 box-flex swiper-slide position-rel " category="1">
+						<a class="product-div-link j-goods-shop" href="javascript:;"></a>商品</li>
+					<li class="div3 box-flex swiper-slide position-rel" category="3">
+						<a class="product-div-link j-goods-detail" href="javascript:;"></a>详情</li>
+					<li class="div4 box-flex swiper-slide active position-rel swiper-slide-active" category="4">
+						<a class="product-div-link" href="{url('goods/index/comment', array('id'=>$goods.goods_id))}"></a>评论
+				</li>
+				
+				<li class="div4 box-flex swiper-slide  position-rel swiper-slide-next" category="5">
+						<a class="product-div-link" href="{url('goods/index/getzhiliang', array('id'=>$goods_id))}"></a>保障
+				</li>
+				<li class="div4 box-flex swiper-slide position-rel " category="6">
+						<a class="product-div-link" href="{url('goods/index/getchanquan', array('id'=>$goods_id))}"></a>产权
+				</li>
+				<li class="div4 box-flex swiper-slide position-rel" category="7">
+						<a class="product-div-link" href="{url('goods/index/getbaoyang', array('id'=>$goods_id))}"></a>保养</li>
+					<a class="box-flex right j-sharing" href="javascript:;"><i class="iconfont icon-fenxiang col-7"></i></a>
+				</ul>
                 </nav>
                 </h3>
         </header>

@@ -1,7 +1,11 @@
 
 	<div class="hd_bg" style="background-image: none; background-color: rgb(237, 237, 237);">
 		<div class="header w1200" data-mode="header_mode" data-purebox="header">
-			<div class="banner-box" data-type="range"><div class="spec" data-spec="{&quot;header_type&quot;:&quot;defalt_type&quot;,&quot;headerbg_img&quot;:&quot;../data/seller_templates/seller_tem_18/store_tpl_1/images/slide_1490552433.jpg&quot;,&quot;picHeight&quot;:&quot;128&quot;,&quot;custom_content&quot;:&quot;&quot;}"><img src="../data/seller_templates/seller_tem_18/store_tpl_1/images/slide_1490552433.jpg"></div></div>
+			<div class="banner-box" data-type="range">
+			<div class="spec" data-spec="{&quot;header_type&quot;:&quot;defalt_type&quot;,&quot;headerbg_img&quot;:&quot;../data/seller_templates/seller_tem_18/store_tpl_1/images/slide_1490552433.jpg&quot;,&quot;picHeight&quot;:&quot;128&quot;,&quot;custom_content&quot;:&quot;&quot;}">
+			
+			</div>
+			</div>
 			
 		</div>
 	</div>

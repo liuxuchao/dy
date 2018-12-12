@@ -358,7 +358,7 @@ function get_position_list()
  * @param   string  input_name  输入框名称
  * @param   string  input_value 输入框值
  */
-function create_html_editor($input_name, $input_value = '')
+function create_html_editor($input_name, $input_value = '',$assign_name='')
 {
     global $_CFG, $smarty;
 
@@ -374,7 +374,12 @@ function create_html_editor($input_name, $input_value = '')
         $input_height = $_CFG['editing_tools'] == 'ueditor' ? 586 : 500;
         $FCKeditor = '<input type="hidden" id="' . $input_name . '" name="' . $input_name . '" value="' . htmlspecialchars($input_value) . '" /><iframe id="' . $input_name . '_frame" src="../plugins/' . $_CFG['editing_tools'] . '/ecmobanEditor.php?item=' . $input_name . '" width="100%" height="' . $input_height . '" frameborder="0" scrolling="no"></iframe>';
     }
-    $smarty->assign('FCKeditor', $FCKeditor);
+	if($assign_name){
+		$smarty->assign($assign_name, $FCKeditor);
+	}else{
+		$smarty->assign('FCKeditor', $FCKeditor);
+	}
+    
 }
 
 /**

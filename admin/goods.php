@@ -446,7 +446,7 @@ elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit' || $_REQUEST['ac
             $goods['promote_start_date'] = local_date($GLOBALS['_CFG']['time_format'], $goods['promote_start_date']);
             $goods['promote_end_date'] = local_date($GLOBALS['_CFG']['time_format'], $goods['promote_end_date']);
         }
-        
+
         //获取拓展分类id数组
         $other_cat_list1 = array();
         $sql = "SELECT ga.cat_id FROM " . $ecs->table('goods_cat') . " as ga " .
@@ -641,6 +641,7 @@ elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit' || $_REQUEST['ac
     //OSS文件存储ecmoban模板堂 --zhuo start
     if($GLOBALS['_CFG']['open_oss'] == 1){
         $bucket_info = get_bucket_info();
+		
         if($goods['goods_desc']){
             $desc_preg = get_goods_desc_images_preg($bucket_info['endpoint'], $goods['goods_desc']);
             $goods['goods_desc'] = $desc_preg['goods_desc'];
@@ -650,6 +651,9 @@ elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit' || $_REQUEST['ac
 
     /* 创建 html editor */
     create_html_editor('goods_desc', $goods['goods_desc']);
+    create_html_editor('goods_zhiliang', $goods['goods_zhiliang'],'FCKeditor_zhiliang');
+    create_html_editor('goods_chanquan', $goods['goods_chanquan'],'FCKeditor_chanquan');
+    create_html_editor('goods_baoyang', $goods['goods_baoyang'],'FCKeditor_baoyang');
     create_html_editor2('goods_shipai', 'goods_shipai', $goods['goods_shipai']);
 
     /*  @author-bylu 处理分期数据 start  */
@@ -1937,7 +1941,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
                     "cat_id, user_cat, brand_id, shop_price, market_price, cost_price, is_promote, promote_price, " .
                     "promote_start_date, promote_end_date, goods_img, goods_thumb, original_img, keywords, goods_brief, " .
                     "seller_note, goods_weight, goods_number, warn_number, integral, give_integral, is_best, is_new, is_hot, " .
-                    "is_on_sale, is_alone_sale, is_shipping, goods_desc, desc_mobile, add_time, last_update, goods_type, rank_integral, suppliers_id , goods_shipai" . 
+                    "is_on_sale, is_alone_sale, is_shipping, goods_desc,goods_zhiliang, goods_chanquan,goods_baoyang, desc_mobile, add_time, last_update, goods_type, rank_integral, suppliers_id , goods_shipai" . 
                     ", user_id, model_price, model_inventory, model_attr, review_status, commission_rate" . 
                     ", group_number, store_new, store_hot, store_best, goods_cause" .
                     ", goods_product_tag, goods_tag, is_volume, is_fullcut" . $where_drp_sql . $freight_insert_key . //商品运费 by wu
@@ -1949,7 +1953,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
                     "'$promote_start_date', '$promote_end_date', '$goods_img', '$goods_thumb', '$original_img', ".
                     "'$_POST[keywords]', '$_POST[goods_brief]', '$_POST[seller_note]', '$goods_weight', '$goods_number',".
                     " '$warn_number', '$_POST[integral]', '$give_integral', '$is_best', '$is_new', '$is_hot', '$is_on_sale', '$is_alone_sale', $is_shipping, ".
-                    " '$_POST[goods_desc]', '$_POST[desc_mobile]', '" . gmtime() . "', '". gmtime() ."', '$goods_type', '$rank_integral', '$suppliers_id' , '$_POST[goods_shipai]'" . 
+                    " '$_POST[goods_desc]','$_POST[goods_zhiliang]','$_POST[goods_chanquan]','$_POST[goods_baoyang]', '$_POST[desc_mobile]', '" . gmtime() . "', '". gmtime() ."', '$goods_type', '$rank_integral', '$suppliers_id' , '$_POST[goods_shipai]'" . 
                     ", '$adminru[ru_id]', '$model_price', '$model_inventory', '$model_attr', '$review_status', '$commission_rate'" .
                     ", '$group_number', '$store_new', '$store_hot', '$store_best', '$goods_cause'" .
                     ", '$_POST[goods_product_tag]', '$_POST[goods_tag]', '$is_volume', '$is_fullcut'" . $where_drp_val . $freight_insert_val . //商品运费 by wu
@@ -1966,7 +1970,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
                     "promote_start_date, promote_end_date, goods_img, goods_thumb, original_img, " .
                     "keywords, goods_brief, seller_note, goods_weight, goods_number, " . 
                     "warn_number, integral, give_integral, is_best, is_new, is_hot, is_real, " .
-                    "is_on_sale, is_alone_sale, is_shipping, goods_desc, desc_mobile, add_time, last_update, goods_type, " .
+                    "is_on_sale, is_alone_sale, is_shipping, goods_desc,goods_zhiliang, goods_chanquan,goods_baoyang, desc_mobile, add_time, last_update, goods_type, " .
                     "extension_code, rank_integral ,  goods_shipai" .
                     ", user_id, model_price, model_inventory, model_attr, review_status, commission_rate" . 
                      ", group_number, store_new, store_hot, store_best, goods_cause" .
@@ -1979,7 +1983,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
                     "'$promote_start_date', '$promote_end_date', '$goods_img', '$goods_thumb', '$original_img', ".
                     "'$_POST[keywords]', '$_POST[goods_brief]', '$_POST[seller_note]', '$goods_weight', '$goods_number',".
                     " '$warn_number', '$_POST[integral]', '$give_integral', '$is_best', '$is_new', '$is_hot', 0, " .
-                    "'$is_on_sale', '$is_alone_sale', $is_shipping, '$_POST[goods_desc]', '$_POST[desc_mobile]', '" . gmtime() . "', '". gmtime() ."', '$goods_type', " .
+                    "'$is_on_sale', '$is_alone_sale', $is_shipping, '$_POST[goods_desc]','$_POST[goods_zhiliang]','$_POST[goods_chanquan]','$_POST[goods_baoyang]', '$_POST[desc_mobile]', '" . gmtime() . "', '". gmtime() ."', '$goods_type', " .
                     " '$code', '$rank_integral' , '$_POST[goods_shipai]'" . 
                     ", '$adminru[ru_id]', '$model_price', '$model_inventory', '$model_attr', '$review_status', '$commission_rate'" .
                     ", '$group_number', '$store_new', '$store_hot', '$store_best', '$goods_cause'" .
@@ -2114,6 +2118,9 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
                 "is_alone_sale = '$is_alone_sale', " .
                 "is_shipping = '$is_shipping', " .
                 "goods_desc = '$_POST[goods_desc]', " .
+		     "goods_zhiliang = '$_POST[goods_zhiliang]', " .
+		     "goods_chanquan = '$_POST[goods_chanquan]', " .
+		     "goods_baoyang = '$_POST[goods_baoyang]', " .
                 "desc_mobile = '$_POST[desc_mobile]', " .
                 "goods_shipai = '$_POST[goods_shipai]', " .
                 "last_update = '". gmtime() ."', ".
@@ -6056,6 +6063,7 @@ elseif ($_REQUEST['act'] == 'scan_code')
 			create_html_editor('goods_desc', trim($data['result']['description']));
 			$goods_desc = $smarty->get_template_vars('FCKeditor');
 		}
+
 		
 		//初始商品信息
 		$goods_info = array();

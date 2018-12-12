@@ -46,12 +46,12 @@ if (!$smarty->is_cached('merchants.dwt'))
     //ecmoban模板堂 --zhuo start
 
     $marticle = explode(',',$_CFG['marticle']);
-
+	
     $article_menu1 = get_merchants_article_menu($marticle[0]);
     $article_menu2 = get_merchants_article_menu($marticle[1]);
 
     $article_info = get_merchants_article_info($article_id);
-
+    $article_title = steps_process_title();
     for($i=1;$i<=$_CFG['auction_ad'];$i++){
             $ad_arr .= "'merch".$i.",";
     }
@@ -77,6 +77,7 @@ if (!$smarty->is_cached('merchants.dwt'))
     $smarty->assign('article_menu2',         $article_menu2);  // 文章列表
     $smarty->assign('article_id',         $article_id);  // 文章ID
     $smarty->assign('marticle',         $marticle[0]); 
+    $smarty->assign('article_title',         $article_title); 
     //ecmoban模板堂 --zhuo end
     if (defined('THEME_EXTENSION')){
         $user_id = isset($_SESSION['user_id'])  ?  $_SESSION['user_id'] : 0;

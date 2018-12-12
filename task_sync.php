@@ -14,7 +14,6 @@
 	if($res){
 		while ($row = $db->fetchRow($res))
 		{
-			
 			$syncResult = false;
 			$syncId = $row['id'];
 			$actionType = $row['action_type'];
@@ -23,14 +22,14 @@
 				$syncResult = syncUserInfo($actionType,$tableId,'user_id');		//同步用户表
 			}elseif($row['table_name'] == 'order_info'){
 				$syncResult = syncOrder($actionType,$tableId,'order_id');		//同步订单表
-			}elseif($row['table_name'] == 'user_address'){
-				$syncResult = syncUserAddress($actionType,$tableId,'address_id');  //同步地址表
 			}elseif($row['table_name'] == 'delivery_goods'){
 				$syncResult = syncDelivery($actionType,$tableId,'rec_id');		//同步物流表
 			}elseif($row['table_name'] == 'order_return'){
 				$syncResult = syncOrderReturn($actionType,$tableId,'ret_id');		//同步退货表
 			}elseif($row['table_name'] == 'order_invoice'){
 				$syncResult = syncInvoice($actionType,$tableId,'invoice_id');		//同步发票表
+			}elseif($row['table_name'] == 'user_address'){
+				//$syncResult = syncUserAddress($actionType,$tableId,'address_id');  //同步地址表
 			}
 			if($syncResult == true){
 				updateSyncStatus($syncId,1);		//成功
@@ -43,9 +42,11 @@
 		return;
 	}
 	echo "end task!";
+	
+	
 	/**
 	* 同步用户表
-	*@param $actionType	操作类型  1：新增 2：修改
+	*@param $actionType	操作类型   2：修改
 	*@param $tableId		表的id
 	*@param $tableValue	字段名称
 	*@return bool 
@@ -60,19 +61,25 @@
 		if(empty($userInfo)){
 			return false;
 		}
+		$userId = $userInfo['user_id'];
+		$hd_user_id = getHdIdByUserId($userId);
+		if($hd_user_id == 0){
+			return;
+		}
+		
 		$jsonData = array("log_time"=>time(),"log_info"=>array());
 		$jsonData['log_info'] = array(
-			"user_id" => $userInfo['user_id'],
+			"user_id" => hd_user_id,
 			"user_name"  => $userInfo['user_name'],
 			"email"  => $userInfo['email'],
 			"nick_name" => $userInfo['nick_name'],
 			"mobile_phone"  => $userInfo['mobile_phone'],
 			"reg_time"  => $userInfo['reg_time'],
 		);
-		if($actionType==1){
-			$file_type ="/userAdd";
-		}elseif($actionType==2){
-			$file_type = "/userUpdate";
+		if($actionType==2){
+			$file_type ="/update_user";
+		}else{
+			return;
 		}
 		$buildResult = buildFile($actionType,json_encode($jsonData),$file_type);		//创建文件
 		if($buildResult){
@@ -123,24 +130,101 @@
 		if(empty($Info)){
 			return false;
 		}
-		$jsonData = array("log_time"=>time(),"log_info"=>array());
-		$jsonData['log_info'] = array(
-			"user_id" => $Info['user_id'],
-			"user_name"  => $Info['user_name'],
-			"email"  => $Info['email'],
-			"nick_name" => $Info['nick_name'],
-			"mobile_phone"  => $Info['mobile_phone'],
-			"reg_time"  => $Info['reg_time'],
-		);
+		$userId = $Info['user_id'];
+		$hd_user_id = getHdIdByUserId($userId);
+		if($hd_user_id == 0){
+			return;
+		}
+		$jsonData = formartOrderInfo($Info,$hd_user_id);
 		if($actionType==1){
-			$file_type ="/orderyAdd";
+			$file_type ="/add_order";
 		}elseif($actionType==2){
-			$file_type = "/orderUpdate";
+			$file_type = "/update_order";
 		}
 		$buildResult = buildFile($actionType,json_encode($jsonData),$file_type);		//创建文件
 		return false;
 	}
 	
+	/**
+	*格式化 订单信息
+	*@param $orderInfo 订单数据
+	*@param $hd_user_id 恒大用户ID
+	**/
+	function formartOrderInfo($orderInfo,$hd_user_id)
+	{
+		$jsonData = array("log_time"=>time(),"log_info"=>array());
+		$main_order_id = $orderInfo['main_order_id'];
+		unset($orderInfo['main_order_id']);
+		unset($orderInfo['how_surplus']);
+		unset($orderInfo['pack_name']);
+		unset($orderInfo['card_name']);
+		unset($orderInfo['to_buyer']);
+		unset($orderInfo['pay_note']);
+		unset($orderInfo['is_separate']);
+		unset($orderInfo['discount_all']);
+		unset($orderInfo['is_delete']);
+		unset($orderInfo['is_settlement']);
+		unset($orderInfo['sign_time']);
+		unset($orderInfo['is_single']);
+		unset($orderInfo['supplier_id']);
+		unset($orderInfo['froms']);
+		unset($orderInfo['is_zc_order']);
+		unset($orderInfo['zc_goods_id']);
+		unset($orderInfo['is_frozen']);
+		unset($orderInfo['chargeoff_status']);
+		unset($orderInfo['vat_id']);
+		unset($orderInfo['is_update_sale']);
+		$orderInfo['memid'] = $hd_user_id;
+		global $db, $ecs;	
+		$orderSql = "SELECT * FROM " .$ecs->table('order_goods'). " where order_id=".$orderInfo['order_id'];
+		$goodsInfo = $db->query($orderSql);
+		$orderInfo['goods'] = array();
+		if(!empty($goodsInfo)){
+			
+			while ($row = $db->fetchRow($goodsInfo)){
+				
+				$tmp = array(
+					"user_id"=> $hd_user_id,
+					"goods_number"=> $row['goods_number'],
+					"goods_price"=>$row['goods_price'],
+					"goods_name"=>$row['goods_name'],
+					"goods_img"=>'',
+				);
+				if($row['goods_attr'] > 0){
+					$attrsql = "SELECT * FROM " .$ecs->table('goods_attr'). " where goods_attr_id=".$row['goods_attr']." and goods_id=".$row['goods_id']." limit 1";
+					$attrInfo = $db->getRow($attrsql);
+					if($attrInfo){
+						$tmp['goods_img'] = $_SERVER['HTTP_HOST']."/".$attrInfo['attr_img_file'];
+					}
+				}
+				array_push($orderInfo['goods'],$tmp);
+			}
+		}
+		
+		$jsonData['log_info'] = $orderInfo;
+		return $jsonData;
+	}
+	
+	function getHdIdByUserId($userId)
+	{
+		if(intval($userId) ==0){
+			return 0;
+		}
+		global $db, $ecs;
+		$sql = "SELECT hd_user_id FROM " .$ecs->table('users'). " where user_id=".$userId." limit 1";
+		$Info = $db->getRow($sql);
+		if(empty($Info)){
+			return 0;
+		}else{
+			return $Info['hd_user_id'];
+		}
+	}
+	
+	
+	/**
+	*物流信息 
+	*
+	**/
 	function syncDelivery($actionType,$tableId,$tableValue)
 	{
 		$Info = array();
@@ -151,14 +235,13 @@
 			return false;
 		}
 		$jsonData = array("log_time"=>time(),"log_info"=>array());
-		$jsonData['log_info'] = array(
-			"goods_id" => $Info['goods_id'],
-			"goods_sn" => $Info['goods_sn'],
-		);
+		foreach($Info as $key=>$val){
+			$jsonData["log_info"][$key]=$val;
+		}
 		if($actionType==1){
-			$file_type ="/deliveryAdd";
+			$file_type ="/add_express";
 		}elseif($actionType==2){
-			$file_type = "/deliveryUpdate";
+			$file_type = "/update_express";
 		}
 		$buildResult = buildFile($actionType,json_encode($jsonData),$file_type);		//创建文件
 		if($buildResult){
@@ -177,10 +260,9 @@
 			return false;
 		}
 		$jsonData = array("log_time"=>time(),"log_info"=>array());
-		$jsonData['log_info'] = array(
-			"user_id" => $Info['user_id'],
-			"goods_id"  => $Info['goods_id'],
-		);
+		foreach($Info as $key=>$val){
+			$jsonData["log_info"][$key]=$val;
+		}
 		if($actionType==1){
 			$file_type ="/orderReturnAdd";
 		}elseif($actionType==2){
@@ -204,16 +286,13 @@
 			return false;
 		}
 		$jsonData = array("log_time"=>time(),"log_info"=>array());
-		$jsonData['log_info'] = array(
-			"user_id" => $Info['user_id'],
-			"invoice_id"  => $Info['invoice_id'],
-			"inv_payee"  => $Info['inv_payee'],
-			"tax_id" => $Info['tax_id'],
-		);
+		foreach($Info as $key=>$val){
+			$jsonData["log_info"][$key]=$val;
+		}
 		if($actionType==1){
-			$file_type ="/invoiceAdd";
+			$file_type ="/add_invoice";
 		}elseif($actionType==2){
-			$file_type = "/invoiceUpdate";
+			$file_type = "/update_invoice";
 		}
 		$buildResult = buildFile($actionType,json_encode($jsonData),$file_type);		//创建文件
 		if($buildResult){
@@ -229,14 +308,14 @@
 		{
 			return false;
 		}
+		
 		$basePath = "/ecmoban/www/data/logs/";
 		$path = $basePath.date("Y-m-d",time());
 		if(!is_dir($path)){
 			mkdirs($path);
 		}
-		$nowTime = time()- strtotime(date("Y-m-d",time()));
-
-		$fullPathFileName = $path. $file_type.'_'.date("Y-m-d",time()).$nowTime."_".mt_rand(10000,99999).".json";
+		$nowTime = date("His",time());
+		$fullPathFileName = $path. $file_type.'_'.date("Ymd",time()).$nowTime.mt_rand(10000,99999).".json";
 		file_put_contents($fullPathFileName,$jsonData);
 		return $fullPathFileName;
 	}

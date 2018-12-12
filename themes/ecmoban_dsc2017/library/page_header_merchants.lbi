@@ -57,10 +57,9 @@
         <div class="settled-header-right">
             <ul class="settled-nav">
                 <li class="curr"><a href="merchants.php">{$lang.home}</a></li>
-                <li><a href="javascript:void(0);" ectype="merchants_article">{$lang.settled_step}</a></li>
-                <li><a href="javascript:void(0);" ectype="merchants_article">{$lang.settled_agreement}</a></li>
-                <li><a href="javascript:void(0);" ectype="merchants_article">{$lang.settled_help}</a></li>
-                <li><a href="javascript:void(0);" ectype="merchants_article">{$lang.understand_more}</a></li>
+				{foreach from=$article_title item=art name=name}
+					<li><a href="javascript:void(0);" ectype="merchants_article">{$art.process_title}</a></li>
+                {/foreach}
             </ul>
             <div class="tel">{$service_phone}</div>
         </div>

@@ -1634,5 +1634,40 @@ class IndexController extends FrontendController
         }
     }
 
+	/**
+     * 商品详情
+     */
+    public function actionGetzhiliang()
+    {
+		
+        $info = $this->db->table('goods')->field('goods_zhiliang')->where(['goods_id' => $this->goods_id])->find();
+        $properties = get_goods_properties($this->goods_id, $this->region_id, $this->area_id);  // 获得商品的规格和属性
+	   $goods_zhiliang = $info['goods_zhiliang'];
+        $this->assign('goods_zhiliang', $goods_zhiliang);
+        $this->display('zhiliang');
+    }
+	
+	/**
+     * 商品详情
+     */
+    public function actionGetchanquan()
+    {
+        $info = $this->db->table('goods')->field('goods_chanquan')->where(['goods_id' => $this->goods_id])->find();
+        $properties = get_goods_properties($this->goods_id, $this->region_id, $this->area_id);  // 获得商品的规格和属性
+	   $goods_chanquan = $info['goods_chanquan'];
+        $this->assign('goods_chanquan', $goods_chanquan);
+        $this->display('chanquan');
+    }	
+	/**
+     * 商品详情
+     */
+    public function actionGetbaoyang()
+    {
+        $info = $this->db->table('goods')->field('goods_baoyang')->where(['goods_id' => $this->goods_id])->find();
+        $properties = get_goods_properties($this->goods_id, $this->region_id, $this->area_id);  // 获得商品的规格和属性
+	   $goods_baoyang = $info['goods_baoyang'];
+        $this->assign('goods_baoyang', $goods_baoyang);
+	   $this->display('baoyang');
+    }
 
 }

@@ -29,7 +29,17 @@
                 <li class="div3 box-flex swiper-slide position-rel swiper-slide-next" category="3">
                     <a class="product-div-link j-goods-detail" href="javascript:;"></a>详情</li>
                 <li class="div4 box-flex swiper-slide position-rel" category="4">
-                    <a class="product-div-link" href="{url('goods/index/comment', array('id'=>$goods.goods_id))}"></a>评论</li>
+                    <a class="product-div-link" href="{url('goods/index/comment', array('id'=>$goods.goods_id))}"></a>评论
+			</li>
+			
+			<li class="div4 box-flex swiper-slide position-rel" category="5">
+                    <a class="product-div-link" href="{url('goods/index/getzhiliang', array('id'=>$goods.goods_id))}"></a>保障
+			</li>
+			<li class="div4 box-flex swiper-slide position-rel" category="6">
+                    <a class="product-div-link" href="{url('goods/index/getchanquan', array('id'=>$goods.goods_id))}"></a>产权
+			</li>
+			<li class="div4 box-flex swiper-slide position-rel" category="7">
+                    <a class="product-div-link" href="{url('goods/index/getbaoyang', array('id'=>$goods.goods_id))}"></a>保养</li>
                 <a class="box-flex right j-sharing" href="javascript:;"><i class="iconfont icon-fenxiang col-7"></i></a>
             </ul>
         </nav>
@@ -520,6 +530,15 @@
                                             <p>亲，此处没有内容～！</p>
                                         </div>
                                         {/if}
+                                    </section>
+                                    <section>
+									{$goods_zhiliang}
+                                    </section>
+									{$goods_zhanquan}
+							<section>
+                                    </section>
+									{$goods_baoyang}
+							<section>
                                     </section>
                                 </div>
                             </div>

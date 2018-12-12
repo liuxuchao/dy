@@ -630,6 +630,11 @@ function get_merchants_article_info($article_id){
 	return $GLOBALS['db']->getRow($sql);
 }
 
+function steps_process_title(){
+	$sql = "select id, process_title, fields_next from " . $GLOBALS['ecs']->table('merchants_steps_process') . " where  is_show = 1 order by steps_sort ASC limit 5";
+	return $GLOBALS['db']->getAll($sql);
+}
+
 /******************文章函数 end************************/
 
 /******************入驻流程函数 start************************/
@@ -1266,7 +1271,7 @@ function get_root_steps_process_list($sid) {
         $arr[$key]['process_title'] = $row['process_title'];
         $arr[$key]['fields_next'] = $row['fields_next'];
     }
-
+	
     return $arr;
 }
 

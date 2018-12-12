@@ -730,6 +730,9 @@
                             <!-- {if $properties} --><li ectype="gm-tab-item-spec">{$lang.specification}</li><!--{/if}-->
                             <li ectype="gm-tab-item">{$lang.user_comment}（<em class="ReviewsCount">{$comment_all.allmen}</em>）</li>
                             <li ectype="gm-tab-item">{$lang.discuss_user}</li>
+                            <li ectype="gm-tab-item">质量保证</li>
+                            <li ectype="gm-tab-item">知识产权</li>
+                            <li ectype="gm-tab-item">保养知识</li>
                         </ul>
                         <div class="extra">
                         	<div class="item">
@@ -848,6 +851,14 @@
                                     <!-- {if $cfg.show_addtime} 上架时间-->
                                     <dd class="column"><span>{$lang.add_time}{$goods.add_time}</span></dd>
                                     <!-- {/if} -->
+									 <dd class="column"><span>检测信息：{$goods.detection}</span></dd>
+									 <dd class="column"><span>贵金属含量：{$goods.pMetal_content}</span></dd>
+									 <dd class="column"><span>克重：{$goods.gram_weight}</span></dd>
+									 <dd class="column"><span>品牌：{$goods.new_brand}</span></dd>
+									 <dd class="column"><span>备注：{$goods.marks}</span></dd>
+									 <dd class="column"><span>证书编号：{$goods.certificate_number}</span></dd>
+									 <dd class="column"><span>批号：{$goods.batch_number}</span></dd>
+									 <dd class="column"><span>检测机构：{$goods.testing_institutions}</span></dd>
                                 </dl>
 
                                 <!-- {if $properties} -->
@@ -932,6 +943,15 @@
                         <div class="gm-f-item gm-f-tiezi" ectype="gm-item">
                             {* DSC 提醒您：动态载入goods_discuss_title.lbi，显示首页分类小广告 *}{insert name='goods_discuss_title' goods_id=$goods.goods_id}
                             <div class="table" id='discuss_list_ECS_COMMENT'></div>
+                        </div>
+                        <div class="gm-f-item gm-f-zhiliang" ectype="gm-item" style="display:none;">
+                            {$goods.goods_zhiliang}
+                        </div>
+                        <div class="gm-f-item gm-f-chanquan" ectype="gm-item" style="display:none;">
+                            {$goods.goods_chanquan}
+                        </div>
+                        <div class="gm-f-item gm-f-baoyang" ectype="gm-item" style="display:none;">
+                            {$goods.goods_baoyang}
                         </div>
                     </div>
                 </div>
