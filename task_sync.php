@@ -22,8 +22,8 @@
 				$syncResult = syncUserInfo($actionType,$tableId,'user_id');		//同步用户表
 			}elseif($row['table_name'] == 'order_info'){
 				$syncResult = syncOrder($actionType,$tableId,'order_id');		//同步订单表
-			}elseif($row['table_name'] == 'delivery_goods'){
-				$syncResult = syncDelivery($actionType,$tableId,'rec_id');		//同步物流表
+			}elseif($row['table_name'] == 'delivery_order'){
+				$syncResult = syncDelivery($actionType,$tableId,'delivery_id');		//同步物流表
 			}elseif($row['table_name'] == 'order_return'){
 				$syncResult = syncOrderReturn($actionType,$tableId,'ret_id');		//同步退货表
 			}elseif($row['table_name'] == 'order_invoice'){
@@ -98,9 +98,14 @@
 		if(empty($userAddressInfo)){
 			return false;
 		}
+		$userId = $userAddressInfo['user_id'];
+		$hd_user_id = getHdIdByUserId($userId);
+		if($hd_user_id == 0){
+			return;
+		}
 		$jsonData = array("log_time"=>time(),"log_info"=>array());
 		$jsonData['log_info'] = array(
-			"user_id" => $userAddressInfo['user_id'],
+			"user_id" => $hd_user_id,
 			"address_name"  => $userAddressInfo['address_name'],
 			"consignee"  => $userAddressInfo['consignee'],
 			"address" => $userAddressInfo['address'],
@@ -125,11 +130,23 @@
 	{
 		$Info = array();
 		global $db, $ecs;
-		$sql = "SELECT * FROM " .$ecs->table('order_info'). " where ".$tableValue."=".$tableId." limit 1";
+		$select_field = "
+			`order_id`,`main_order_id`,`order_sn`,`user_id`,`order_status`,`shipping_status`,`pay_status`,`consignee`,
+			`country`,`province`,`city`,`district`,`street`,`address`,`zipcode`,`tel`,`mobile`,`email`,`best_time`,
+			`sign_building`,`postscript`,`shipping_id`,`shipping_name`,`shipping_code`,`shipping_type`,`pay_id`,`pay_name`,
+			`how_oos`,`card_message`,`inv_payee`,`inv_content`,`goods_amount`,`cost_amount`,`shipping_fee`,`insure_fee`,
+			`pay_fee`,`pack_fee`,`card_fee`,`money_paid`,`surplus`,`integral`,`integral_money`,`bonus`,`order_amount`,
+			`return_amount`,`from_ad`,`referer`,`add_time`,`confirm_time`,`pay_time`,`shipping_time`,`confirm_take_time`,
+			`auto_delivery_time`,`pack_id`,`card_id`,`bonus_id`,`invoice_no`,`extension_code`,`extension_id`,`agency_id`,
+			`inv_type`,`tax`,`parent_id`,`discount`,`point_id`,`shipping_dateStr`,`coupons`,`uc_id`,`invoice_type`,`tax_id`
+		";
+		$sql = "SELECT ".$select_field." FROM " .$ecs->table('order_info'). " where is_delete=0 and ".$tableValue."=".$tableId." limit 1";
+
 		$Info = $db->getRow($sql);
 		if(empty($Info)){
 			return false;
 		}
+		
 		$userId = $Info['user_id'];
 		$hd_user_id = getHdIdByUserId($userId);
 		if($hd_user_id == 0){
@@ -154,27 +171,25 @@
 	{
 		$jsonData = array("log_time"=>time(),"log_info"=>array());
 		$main_order_id = $orderInfo['main_order_id'];
+		if($orderInfo['inv_payee']){
+			$orderInfo['needInv'] = 1;
+		}
+		if($orderInfo['insure_fee']){
+			$orderInfo['needInsure'] = 1;
+		}
+		unset($orderInfo['pay_id']);
+		unset($orderInfo['pay_name']);
 		unset($orderInfo['main_order_id']);
-		unset($orderInfo['how_surplus']);
-		unset($orderInfo['pack_name']);
-		unset($orderInfo['card_name']);
-		unset($orderInfo['to_buyer']);
-		unset($orderInfo['pay_note']);
-		unset($orderInfo['is_separate']);
-		unset($orderInfo['discount_all']);
-		unset($orderInfo['is_delete']);
-		unset($orderInfo['is_settlement']);
-		unset($orderInfo['sign_time']);
-		unset($orderInfo['is_single']);
-		unset($orderInfo['supplier_id']);
-		unset($orderInfo['froms']);
-		unset($orderInfo['is_zc_order']);
-		unset($orderInfo['zc_goods_id']);
-		unset($orderInfo['is_frozen']);
-		unset($orderInfo['chargeoff_status']);
-		unset($orderInfo['vat_id']);
-		unset($orderInfo['is_update_sale']);
 		$orderInfo['memid'] = $hd_user_id;
+		$payInfo = getPayLog($orderInfo['order_id']);
+		$paymentInfo = getPayMentInfo($orderInfo['pay_id']);
+		$payAmountInfo = getPayAmount($orderInfo['order_id']);
+		$orderInfo['logId'] = $payInfo['id'] >0 ?$payInfo['id'] : "";
+		$orderInfo['logId'] = $payInfo['id'] >0 ?$payInfo['id'] : "";
+		$orderInfo['payDesc'] = !empty($paymentInfo['pay_desc']) ? $paymentInfo['pay_desc'] : "";
+		$orderInfo['payCode'] = !empty($paymentInfo['pay_code']) ? $paymentInfo['pay_code'] : "";
+		$orderInfo['formatShippingFee'] = !empty($payAmountInfo['sum_fee']) ? $payAmountInfo['sum_fee'] : "";		//运费合计
+		$orderInfo['formatShippingAmount'] = !empty($payAmountInfo['sum_price']) ? $payAmountInfo['sum_price'] : "";//总价合计
 		global $db, $ecs;	
 		$orderSql = "SELECT * FROM " .$ecs->table('order_goods'). " where order_id=".$orderInfo['order_id'];
 		$goodsInfo = $db->query($orderSql);
@@ -221,6 +236,60 @@
 	}
 	
 	
+	/*
+	*支付log
+	*/
+	function getPayLog($orderId)
+	{
+		if(intval($orderId) ==0){
+			return [];
+		}
+		global $db, $ecs;
+		$sql = "SELECT * FROM " .$ecs->table('pay_log'). " where order_id=".$orderId." order by log_id desc limit 1";
+		$payInfo = $db->getRow($sql);
+		if(empty($payInfo)){
+			return [];
+		}else{
+			return $payInfo;
+		}
+	}
+	
+	/*
+	*支付log
+	*/
+	function getPayMentInfo($payId)
+	{
+		if(intval($payId) ==0){
+			return [];
+		}
+		global $db, $ecs;
+		$sql = "SELECT * FROM " .$ecs->table('payment'). " where pay_id=".$payId." enabled=1 order by pay_id desc limit 1";
+		$paymentInfo = $db->getRow($sql);
+		if(empty($paymentInfo)){
+			return [];
+		}else{
+			return $paymentInfo;
+		}
+	}
+	
+	/* 
+	*支付log
+	*/
+	function getPayAmount($orderId)
+	{
+		if(intval($orderId) ==0){
+			return [];
+		}
+		global $db, $ecs;
+		$sql = "SELECT sum(goods_number) as sum_number,sum(shipping_fee) as sum_fee,sum(goods_price) as sum_price FROM " .$ecs->table('order_goods'). " where order_id=".$orderId." limit 1";
+		$paymentInfo = $db->getRow($sql);
+		if(empty($paymentInfo)){
+			return [];
+		}else{
+			return $paymentInfo;
+		}
+	}
+	
 	/**
 	*物流信息 
 	*
@@ -229,13 +298,22 @@
 	{
 		$Info = array();
 		global $db, $ecs;
-		$sql = "SELECT * FROM " .$ecs->table('delivery_goods'). " where ".$tableValue."=".$tableId." limit 1";
+		$sql = "SELECT * FROM " .$ecs->table('delivery_order'). " where ".$tableValue."=".$tableId." limit 1";
 		$Info = $db->getRow($sql);
 		if(empty($Info)){
 			return false;
 		}
+
+		$userId = $Info['user_id'];
+		$hd_user_id = getHdIdByUserId($userId);
+		if($hd_user_id == 0){
+			return;
+		}
 		$jsonData = array("log_time"=>time(),"log_info"=>array());
 		foreach($Info as $key=>$val){
+			if($key =="user_id"){
+				$val = $hd_user_id;
+			}
 			$jsonData["log_info"][$key]=$val;
 		}
 		if($actionType==1){
@@ -259,14 +337,22 @@
 		if(empty($Info)){
 			return false;
 		}
+		$userId = $Info['user_id'];
+		$hd_user_id = getHdIdByUserId($userId);
+		if($hd_user_id == 0){
+			return;
+		}
 		$jsonData = array("log_time"=>time(),"log_info"=>array());
 		foreach($Info as $key=>$val){
+			if($key =="user_id"){
+				$val = $hd_user_id;
+			}
 			$jsonData["log_info"][$key]=$val;
 		}
 		if($actionType==1){
-			$file_type ="/orderReturnAdd";
+			$file_type ="/add_order_return";
 		}elseif($actionType==2){
-			$file_type = "/orderReturnUpdate";
+			$file_type = "/update_order_return";
 		}
 		$buildResult = buildFile($actionType,json_encode($jsonData),$file_type);		//创建文件
 		if($buildResult){
@@ -285,8 +371,16 @@
 		if(empty($Info)){
 			return false;
 		}
+		$userId = $Info['user_id'];
+		$hd_user_id = getHdIdByUserId($userId);
+		if($hd_user_id == 0){
+			return;
+		}
 		$jsonData = array("log_time"=>time(),"log_info"=>array());
 		foreach($Info as $key=>$val){
+			if($key =="user_id"){
+				$val = $hd_user_id;
+			}
 			$jsonData["log_info"][$key]=$val;
 		}
 		if($actionType==1){
@@ -303,7 +397,6 @@
 	
 	function buildFile($actionType,$jsonData,$file_type="/unkonw")
 	{
-		
 		if(empty($jsonData))
 		{
 			return false;
@@ -311,11 +404,12 @@
 		
 		$basePath = "/ecmoban/www/data/logs/";
 		$path = $basePath.date("Y-m-d",time());
+		
 		if(!is_dir($path)){
 			mkdirs($path);
 		}
 		$nowTime = date("His",time());
-		$fullPathFileName = $path. $file_type.'_'.date("Ymd",time()).$nowTime.mt_rand(10000,99999).".json";
+		$fullPathFileName = $path. $file_type.'_'.date("Ymd",time()).$nowTime.mt_rand(10000,99999).".json";		
 		file_put_contents($fullPathFileName,$jsonData);
 		return $fullPathFileName;
 	}

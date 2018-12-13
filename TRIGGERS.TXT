@@ -1,0 +1,104 @@
+
+DELIMITER $$
+CREATE TRIGGER `after_update_users` AFTER UPDATE ON `dsc_users` FOR EACH ROW BEGIN
+if NEW.is_hd_user =1 THEN
+ INSERT INTO `dsc_trigger_log` (
+ `table_name`, `action_type`, `tables_id`,`create_time`) 
+VALUES ('user', '2', NEW.user_id, unix_timestamp(now()));
+end if;
+END
+$$
+DELIMITER ;
+
+
+
+
+
+
+DELIMITER $$
+CREATE TRIGGER `after_insert_delivery_order` AFTER INSERT ON `dsc_delivery_order` FOR EACH ROW begin
+ INSERT INTO `dsc_trigger_log` ( `table_name`, `action_type`, `tables_id`,`create_time`)
+ VALUES ('delivery_order', '1', NEW.delivery_id, unix_timestamp(now()));
+ end
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `after_update_delivery_order` AFTER UPDATE ON `dsc_delivery_order` FOR EACH ROW BEGIN
+ INSERT INTO `dsc_trigger_log` (
+ `table_name`, `action_type`, `tables_id`,`create_time`) 
+VALUES ('delivery_order', '2', NEW.delivery_id, unix_timestamp(now()));
+ END
+$$
+DELIMITER ;
+
+
+
+DELIMITER $$
+CREATE TRIGGER `after_insert_order_info` AFTER INSERT ON `dsc_order_info` FOR EACH ROW begin
+ INSERT INTO `dsc_trigger_log` (
+ `table_name`, `action_type`, `tables_id`,`create_time`) 
+VALUES ('order_info', '1', NEW.order_id, unix_timestamp(now()));
+ end
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `after_update_order_info` AFTER UPDATE ON `dsc_order_info` FOR EACH ROW BEGIN
+ INSERT INTO `dsc_trigger_log` (
+ `table_name`, `action_type`, `tables_id`,`create_time`) 
+VALUES ('order_info', '2', NEW.order_id, unix_timestamp(now()));
+ END
+$$
+DELIMITER ;
+
+
+
+DELIMITER $$
+CREATE TRIGGER `after_insert_delivery_order` AFTER INSERT ON `dsc_delivery_order` FOR EACH ROW begin
+ INSERT INTO `dsc_trigger_log` ( `table_name`, `action_type`, `tables_id`,`create_time`)
+ VALUES ('delivery_order', '1', NEW.delivery_id, unix_timestamp(now()));
+ end
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `after_update_delivery_order` AFTER UPDATE ON `dsc_delivery_order` FOR EACH ROW BEGIN
+ INSERT INTO `dsc_trigger_log` (
+ `table_name`, `action_type`, `tables_id`,`create_time`) 
+VALUES ('delivery_order', '2', NEW.delivery_id, unix_timestamp(now()));
+ END
+$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE TRIGGER `after_insert_order_invoice` AFTER INSERT ON `dsc_order_invoice` FOR EACH ROW begin
+ INSERT INTO `dsc_trigger_log` ( `table_name`, `action_type`, `tables_id`,`create_time`)
+ VALUES ('order_invoice', '1', NEW.invoice_id, unix_timestamp(now()));
+ end
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `after_update_order_invoice` AFTER UPDATE ON `dsc_order_invoice` FOR EACH ROW BEGIN
+ INSERT INTO `dsc_trigger_log` (
+ `table_name`, `action_type`, `tables_id`,`create_time`) 
+VALUES ('order_invoice', '2', NEW.invoice_id, unix_timestamp(now()));
+ END
+$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER `after_insert_user_address` AFTER INSERT ON `dsc_user_address` FOR EACH ROW begin
+ INSERT INTO `dsc_trigger_log` ( `table_name`, `action_type`, `tables_id`,`create_time`)
+ VALUES ('user_address', '1', NEW.address_id, unix_timestamp(now()));
+ end
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `after_update_user_address` AFTER UPDATE ON `dsc_user_address` FOR EACH ROW BEGIN
+ INSERT INTO `dsc_trigger_log` (
+ `table_name`, `action_type`, `tables_id`,`create_time`) 
+VALUES ('user_address', '2', NEW.address_id, unix_timestamp(now()));
+ END
+$$
+DELIMITER ;
+
+

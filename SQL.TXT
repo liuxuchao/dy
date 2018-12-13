@@ -1,0 +1,5 @@
+INSERT INTO `dsc_reg_fields` (`id`, `reg_field_name`, `dis_order`, `display`, `type`, `is_need`) VALUES ('7', '手机验证码', '100', '1', '1', '1');
+
+ALTER TABLE `dsc_users` ADD `is_hd_user` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '是否为恒大用户1：是；0：否' AFTER `user_id`;
+
+ALTER TABLE `dsc_users` ADD `hd_user_id` VARCHAR(32) NULL DEFAULT NULL COMMENT '恒大用户ID' AFTER `is_hd_user`;
