@@ -172,10 +172,10 @@
 		$jsonData = array("log_time"=>time(),"log_info"=>array());
 		$main_order_id = $orderInfo['main_order_id'];
 		if($orderInfo['inv_payee']){
-			$orderInfo['needInv'] = 1;
+			$orderInfo['need_inv'] = 1;
 		}
 		if($orderInfo['insure_fee']){
-			$orderInfo['needInsure'] = 1;
+			$orderInfo['need_insure'] = 1;
 		}
 		unset($orderInfo['pay_id']);
 		unset($orderInfo['pay_name']);
@@ -189,7 +189,54 @@
 		$orderInfo['payDesc'] = !empty($paymentInfo['pay_desc']) ? $paymentInfo['pay_desc'] : "";
 		$orderInfo['payCode'] = !empty($paymentInfo['pay_code']) ? $paymentInfo['pay_code'] : "";
 		$orderInfo['formatShippingFee'] = !empty($payAmountInfo['sum_fee']) ? $payAmountInfo['sum_fee'] : "";		//运费合计
-		$orderInfo['formatShippingAmount'] = !empty($payAmountInfo['sum_price']) ? $payAmountInfo['sum_price'] : "";//总价合计
+		$orderInfo['formatOrderAmount'] = !empty($payAmountInfo['sum_price']) ? $payAmountInfo['sum_price'] : "";//总价合计
+		
+		
+		//格式化 金额
+		$orderInfo['goods_amount']  = (float)$orderInfo['goods_amount']; 
+		$orderInfo['cost_amount']  = (float)$orderInfo['cost_amount']; 
+		$orderInfo['shipping_fee']  = (float)$orderInfo['shipping_fee']; 
+		$orderInfo['insure_fee']  = (float)$orderInfo['insure_fee']; 
+		$orderInfo['pay_fee']  = (float)$orderInfo['pay_fee']; 
+		$orderInfo['pack_fee']  = (float)$orderInfo['pack_fee']; 
+		$orderInfo['card_fee']  = (float)$orderInfo['card_fee']; 
+		$orderInfo['money_paid']  = (float)$orderInfo['money_paid']; 
+		$orderInfo['surplus']  = (float)$orderInfo['surplus']; 
+		$orderInfo['integral_money']  = (float)$orderInfo['integral_money']; 
+		$orderInfo['order_amount']  = (float)$orderInfo['order_amount']; 
+		$orderInfo['return_amount']  = (float)$orderInfo['return_amount']; 
+		$orderInfo['discount']  = (float)$orderInfo['discount']; 
+		$orderInfo['coupons']  = (float)$orderInfo['coupons']; 
+		$orderInfo['formatShippingFee']  = (float)$orderInfo['formatShippingFee']; 
+		$orderInfo['formatOrderAmount']  = (float)$orderInfo['formatOrderAmount']; 
+		
+		//格式化  整型 
+		
+		$orderInfo['order_id']  = intval($orderInfo['order_id']); 
+		$orderInfo['user_id']  = intval($orderInfo['user_id']);  
+		$orderInfo['order_status']  = intval($orderInfo['order_status']);  
+		$orderInfo['pay_status']  = intval($orderInfo['pay_status']);  
+		$orderInfo['shipping_id']  = intval($orderInfo['shipping_id']); 
+		$orderInfo['shipping_type']  = intval($orderInfo['shipping_type']); 
+		$orderInfo['integral']  = intval($orderInfo['integral']); 
+		$orderInfo['from_ad']  = intval($orderInfo['from_ad']); 
+		$orderInfo['pack_id']  = intval($orderInfo['pack_id']); 
+		$orderInfo['card_id']  = intval($orderInfo['card_id']); 
+		$orderInfo['bonus_id']  = intval($orderInfo['bonus_id']); 
+		$orderInfo['extension_id']  = intval($orderInfo['extension_id']); 
+		$orderInfo['inv_type']  = intval($orderInfo['inv_type']); 
+		$orderInfo['point_id']  = intval($orderInfo['point_id']); 
+		$orderInfo['invoice_type']  = intval($orderInfo['invoice_type']); 
+		$orderInfo['tax_id']  = intval($orderInfo['tax_id']); 
+		$orderInfo['country']  = intval($orderInfo['country']); 
+		$orderInfo['province']  = intval($orderInfo['province']); 
+		$orderInfo['city']  = intval($orderInfo['city']); 
+		$orderInfo['district']  = intval($orderInfo['district']); 
+		$orderInfo['street']  = intval($orderInfo['street']); 
+		$orderInfo['confirm_take_time']  = intval($orderInfo['confirm_take_time']); 
+		$orderInfo['auto_delivery_time']  = intval($orderInfo['auto_delivery_time']); 
+		$orderInfo['parent_id']  = intval($orderInfo['parent_id']); 
+		
 		global $db, $ecs;	
 		$orderSql = "SELECT * FROM " .$ecs->table('order_goods'). " where order_id=".$orderInfo['order_id'];
 		$goodsInfo = $db->query($orderSql);
@@ -199,11 +246,11 @@
 			while ($row = $db->fetchRow($goodsInfo)){
 				
 				$tmp = array(
-					"user_id"=> $hd_user_id,
-					"goods_number"=> $row['goods_number'],
-					"goods_price"=>$row['goods_price'],
-					"goods_name"=>$row['goods_name'],
-					"goods_img"=>'',
+					"item_id"=> $hd_user_id,
+					"item_number"=> intval($row['goods_number']),
+					"item_price"=>  (float)$row['goods_price'],
+					"item_name"=> $row['goods_name'],
+					"item_img"=>'',
 				);
 				if($row['goods_attr'] > 0){
 					$attrsql = "SELECT * FROM " .$ecs->table('goods_attr'). " where goods_attr_id=".$row['goods_attr']." and goods_id=".$row['goods_id']." limit 1";
